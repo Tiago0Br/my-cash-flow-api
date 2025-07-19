@@ -1,0 +1,25 @@
+{
+    "name": "tiagolopes/my-cash-flow-api",
+    "description": "API para sistema de gestão de finanças",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Tiagolopes\\MyCashFlowApi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Tiago Lopes",
+            "email": "tiagoltavares2002@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "8.4"
+    },
+    "scripts": {
+        "serve": "php -S localhost:3000 -t ./public",
+        "dev": [
+            "@serve"
+        ]
+    }
+}
