@@ -5,7 +5,10 @@
     "autoload": {
         "psr-4": {
             "Tiagolopes\\MyCashFlowApi\\": "src/"
-        }
+        },
+        "files": [
+            "config/functions.php"
+        ]
     },
     "authors": [
         {
