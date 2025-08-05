@@ -14,11 +14,15 @@
         }
     ],
     "require": {
-        "php": "8.4"
+        "php": "8.4",
+        "ext-pdo": "*"
     },
     "scripts": {
         "serve": "php -S localhost:3000 -t ./public",
+        "migrate": "php bin/migrate.php",
+        "migrate:create": "php bin/create-migration.php",
         "dev": [
+            "@migrate",
             "@serve"
         ]
     }
