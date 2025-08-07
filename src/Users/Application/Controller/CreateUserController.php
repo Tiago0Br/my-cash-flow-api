@@ -20,8 +20,8 @@ class CreateUserController implements ControllerInterface
         $createUser = $container->get(CreateUser::class);
         $createUser->create($createUserDto);
 
-        sendResponse(201, [
+        sendResponse([
             'message' => 'User created successfully',
-        ]);
+        ], 201);
     }
 }

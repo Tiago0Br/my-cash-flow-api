@@ -17,11 +17,15 @@
         }
     ],
     "require": {
-        "php": "8.4",
-        "ext-pdo": "*"
+        "php": "^8.4",
+        "ext-pdo": "*",
+        "zircote/swagger-php": "^5.1"
     },
     "scripts": {
-        "serve": "php -S localhost:3000 -t ./public",
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "php -S localhost:3000 -t ./public"
+        ],
         "migrate": "php bin/migrate.php",
         "migrate:create": "php bin/create-migration.php",
         "dev": [
