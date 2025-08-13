@@ -6,7 +6,7 @@ namespace Tiagolopes\MyCashFlowApi\Users\Application\Controller;
 
 use Tiagolopes\MyCashFlowApi\Core\Domain\Dto\RequestDto;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Interfaces\ControllerInterface;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Container;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Facade\Container;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Dto\SaveUserDto;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Service\CreateUser;
 

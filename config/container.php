@@ -1,13 +1,13 @@
 <?php
 
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Container;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DbConnection;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Database\Connection;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Facade\Container;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Repository\UserRepositoryInterface;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Service\CreateUser;
 use Tiagolopes\MyCashFlowApi\Users\Infrastructure\Pdo\UserRepositoryFromPdo;
 
 $container = Container::getInstance();
-$db        = DbConnection::getInstance();
+$db        = Connection::getInstance();
 
 // Service
 $container->add(

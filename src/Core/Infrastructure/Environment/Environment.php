@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tiagolopes\MyCashFlowApi\Core\Infrastructure;
+namespace Tiagolopes\MyCashFlowApi\Core\Infrastructure\Environment;
 
 use RuntimeException;
 

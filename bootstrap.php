@@ -1,6 +1,6 @@
 <?php
 
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Environment;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Environment\Environment;
 
 require_once __DIR__ . '/vendor/autoload.php';
 

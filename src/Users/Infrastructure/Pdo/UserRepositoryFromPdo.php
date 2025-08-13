@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Tiagolopes\MyCashFlowApi\Users\Infrastructure\Pdo;
 
 use PDO;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DbConnection;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Database\Connection;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Entity\User;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Repository\UserRepositoryInterface;
 
 readonly class UserRepositoryFromPdo implements UserRepositoryInterface
 {
-    public function __construct(private DbConnection $db)
+    public function __construct(private Connection $db)
     {
     }
 

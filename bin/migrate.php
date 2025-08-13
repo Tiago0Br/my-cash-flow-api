@@ -1,13 +1,13 @@
 <?php
 
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DbConnection;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Environment;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Database\Connection;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Environment\Environment;
 
 require __DIR__ . '/../vendor/autoload.php';
 
 Environment::initialize(__DIR__ . '/../');
 
-$db = DbConnection::getInstance();
+$db = Connection::getInstance();
 $db->exec("CREATE TABLE IF NOT EXISTS migrations (id SERIAL PRIMARY KEY, name VARCHAR(255))");
 
 $executedMigrations = $db

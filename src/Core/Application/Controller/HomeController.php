@@ -7,7 +7,7 @@ namespace Tiagolopes\MyCashFlowApi\Core\Application\Controller;
 use OpenApi\Attributes as OA;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Dto\RequestDto;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Interfaces\ControllerInterface;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Container;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Facade\Container;
 
 class HomeController implements ControllerInterface
 {
