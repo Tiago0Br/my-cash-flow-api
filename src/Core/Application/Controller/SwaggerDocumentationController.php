@@ -27,6 +27,5 @@ class SwaggerDocumentationController implements ControllerInterface
             data: $content,
             contentType: 'text/html'
         );
-
     }
 }
