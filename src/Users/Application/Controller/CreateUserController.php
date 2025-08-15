@@ -6,6 +6,7 @@ namespace Tiagolopes\MyCashFlowApi\Users\Application\Controller;
 
 use OpenApi\Attributes as OA;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Dto\RequestDto;
+use Tiagolopes\MyCashFlowApi\Core\Domain\Enum\StatusCode;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Interfaces\ControllerInterface;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Dto\SaveUserDto;
@@ -94,6 +95,6 @@ class CreateUserController implements ControllerInterface
 
         sendResponse([
             'message' => 'User created successfully',
-        ], 201);
+        ], StatusCode::CREATED);
     }
 }

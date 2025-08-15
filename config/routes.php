@@ -3,6 +3,7 @@
 use Tiagolopes\MyCashFlowApi\Core\Application\Controller\ApiDocumentationController;
 use Tiagolopes\MyCashFlowApi\Core\Application\Controller\SwaggerDocumentationController;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\App;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Middlewares\ErrorHandler;
 
 $app = App::getInstance();
 
@@ -19,4 +20,8 @@ $app
     ->get('/docs/json', ApiDocumentationController::class)
     ->get('/docs', SwaggerDocumentationController::class);
 
-$app->run();
+try {
+    $app->run();
+} catch (Throwable $e) {
+    ErrorHandler::handle($e);
+}

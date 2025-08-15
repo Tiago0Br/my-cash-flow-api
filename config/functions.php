@@ -1,8 +1,10 @@
 <?php
 
+use Tiagolopes\MyCashFlowApi\Core\Domain\Enum\StatusCode;
+
 function sendResponse(
     array|string|null $data = null,
-    int $code = 200,
+    int $code = StatusCode::OK,
     string $contentType = 'application/json'
 ): void {
     header('Content-Type: ' . $contentType);
