@@ -1,6 +1,6 @@
 <?php
 
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Facade\App;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\App;
 use Tiagolopes\MyCashFlowApi\Users\Application\Controller as Users;
 
 $app = App::getInstance();

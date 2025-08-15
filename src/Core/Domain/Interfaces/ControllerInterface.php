@@ -3,7 +3,7 @@
 namespace Tiagolopes\MyCashFlowApi\Core\Domain\Interfaces;
 
 use Tiagolopes\MyCashFlowApi\Core\Domain\Dto\RequestDto;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Facade\Container;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
 
 interface ControllerInterface
 {

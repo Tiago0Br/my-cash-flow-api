@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tiagolopes\MyCashFlowApi\Core\Infrastructure\Facade;
+namespace Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http;
 
 use RuntimeException;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Dto\RequestDto;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Exception\NotFoundException;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Interfaces\ControllerInterface;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Interfaces\MiddlewareInterface;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
 
 class App
 {

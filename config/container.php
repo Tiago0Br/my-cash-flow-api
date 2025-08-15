@@ -4,7 +4,7 @@ use Tiagolopes\MyCashFlowApi\Core\Domain\Auth\AuthenticationInterface;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Repository\SessionRepository;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Auth\Authentication;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Database\Connection;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Facade\Container;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Repository\Pdo\SessionRepositoryFromPdo;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Repository\UserRepositoryInterface;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Service\CreateUser;

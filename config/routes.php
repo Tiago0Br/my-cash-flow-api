@@ -2,7 +2,7 @@
 
 use Tiagolopes\MyCashFlowApi\Core\Application\Controller\ApiDocumentationController;
 use Tiagolopes\MyCashFlowApi\Core\Application\Controller\SwaggerDocumentationController;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Facade\App;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\App;
 
 $app = App::getInstance();
 

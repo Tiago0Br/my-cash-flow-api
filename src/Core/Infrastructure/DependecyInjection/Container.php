@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tiagolopes\MyCashFlowApi\Core\Infrastructure\Facade;
+namespace Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection;
 
 use Exception;
 
