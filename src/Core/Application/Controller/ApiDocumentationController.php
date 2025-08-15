@@ -15,7 +15,8 @@ class ApiDocumentationController implements ControllerInterface
     {
         $openapi = new Generator()->generate([
             __DIR__ . '/../../Domain/OpenApi',
-            __DIR__ . '/../../Application/Controller'
+            __DIR__ . '/../../Application/Controller',
+            __DIR__ . '/../../../Users/Application/Controller'
         ]);
 
         sendResponse(

@@ -16,7 +16,7 @@
         Scalar.createApiReference('#app', {
             url: '<?= getBaseUrl() ?>/docs/json',
             proxyUrl: 'https://proxy.scalar.com',
-            theme: 'default',
+            theme: 'kepler',
             layout: 'modern',
             showSidebar: true,
             hideDownloadButton: false,
