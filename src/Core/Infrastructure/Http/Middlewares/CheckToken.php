@@ -15,11 +15,7 @@ class CheckToken implements MiddlewareInterface
 {
     public function handle(Container $container, Request $request): void
     {
-        $token = $request->headers['Authorization'];
-
-        if (! is_string($token) || trim($token) === '') {
-            throw UnauthorizedException::create();
-        }
+        $token = $this->extractTokenFromRequest($request);
 
         /** @var AuthenticationInterface $authentication */
         $authentication = $container->get(AuthenticationInterface::class);
@@ -30,5 +26,24 @@ class CheckToken implements MiddlewareInterface
         $user           = $userRepository->getById($userId);
 
         $request->setLoggedUser($user);
+    }
+
+    private function extractTokenFromRequest(Request $request): string
+    {
+        $authHeader = $request->headers['Authorization']
+            ?? $request->headers['authorization']
+            ?? null;
+
+        if (! is_string($authHeader) || trim($authHeader) === '') {
+            throw UnauthorizedException::create();
+        }
+
+        $token = preg_replace(pattern: '/^Bearer\s+/i', replacement: '', subject: trim($authHeader));
+
+        if (empty($token)) {
+            throw UnauthorizedException::create();
+        }
+
+        return $token;
     }
 }

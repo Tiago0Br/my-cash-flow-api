@@ -31,9 +31,9 @@ class ErrorHandler
 
         sendResponse(
             data: [
-                'error' => $statusCode !== StatusCode::INTERNAL_SERVER_ERROR
-                    ? $error->getMessage()
-                    : 'Internal server error.',
+                'error' => ($statusCode === StatusCode::INTERNAL_SERVER_ERROR && $_ENV['APP_ENV'] === 'production')
+                    ? 'Internal server error.'
+                    : $error->getMessage(),
             ],
             code: $statusCode
         );

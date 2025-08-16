@@ -1,59 +1,10 @@
 <?php
 
-use Tiagolopes\MyCashFlowApi\Core\Domain\Auth\AuthenticationInterface;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Repository\SessionRepository;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Auth\Authentication;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Database\Connection;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Repository\Pdo\SessionRepositoryFromPdo;
-use Tiagolopes\MyCashFlowApi\Users\Domain\Repository\UserRepositoryInterface;
-use Tiagolopes\MyCashFlowApi\Users\Domain\Service\CreateUser;
-use Tiagolopes\MyCashFlowApi\Users\Domain\Service\Login;
-use Tiagolopes\MyCashFlowApi\Users\Infrastructure\Pdo\UserRepositoryFromPdo;
+/** @var string[] $modules */
+$modules = require_once __DIR__ . '/modules.php';
 
-$container = Container::getInstance();
-$db        = Connection::getInstance();
-
-// Service
-$container->add(
-    item: CreateUser::class,
-    resolver: function () use ($container) {
-        return new CreateUser(
-            userRepository: $container->get(UserRepositoryInterface::class)
-        );
+foreach ($modules as $module) {
+    if (file_exists(__DIR__ . "/modules/$module/container.php")) {
+        require_once __DIR__ . "/modules/$module/container.php";
     }
-);
-
-$container->add(
-    item: Login::class,
-    resolver: function () use ($container) {
-        return new Login(
-            userRepository: $container->get(UserRepositoryInterface::class),
-            authentication: $container->get(AuthenticationInterface::class)
-        );
-    }
-);
-
-// Repository
-$container->add(
-    item: UserRepositoryInterface::class,
-    resolver: function () use ($db) {
-        return new UserRepositoryFromPdo($db);
-    }
-);
-
-$container->add(
-    item: SessionRepository::class,
-    resolver: function () use ($db) {
-        return new SessionRepositoryFromPdo($db);
-    }
-);
-
-
-// Auth
-$container->add(
-    item: AuthenticationInterface::class,
-    resolver: function () use ($container) {
-        return new Authentication($container->get(SessionRepository::class));
-    }
-);
+}
