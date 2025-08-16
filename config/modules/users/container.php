@@ -9,6 +9,7 @@ use Tiagolopes\MyCashFlowApi\Users\Domain\Repository\AccountRepositoryInterface;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Repository\UserRepositoryInterface;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Service\CreateAccount;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Service\CreateUser;
+use Tiagolopes\MyCashFlowApi\Users\Domain\Service\DeleteAccount;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Service\Login;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Service\UpdateAccount;
 use Tiagolopes\MyCashFlowApi\Users\Infrastructure\Pdo\AccountRepositoryFromPdo;
@@ -50,6 +51,15 @@ $container->add(
     item: UpdateAccount::class,
     resolver: function () use ($container) {
         return new UpdateAccount(
+            accountRepository: $container->get(AccountRepositoryInterface::class)
+        );
+    }
+);
+
+$container->add(
+    item: DeleteAccount::class,
+    resolver: function () use ($container) {
+        return new DeleteAccount(
             accountRepository: $container->get(AccountRepositoryInterface::class)
         );
     }

@@ -16,4 +16,6 @@ interface AccountRepositoryInterface
 
     /** @return array<Account> */
     public function findAllByUserId(int $userId): array;
+
+    public function delete(Account $account): void;
 }

@@ -11,4 +11,5 @@ $app
     ->post('/login', Users\LoginController::class)
     ->post('/accounts', Users\CreateAccountController::class, [CheckToken::class])
     ->get('/accounts', Users\GetAccountsController::class, [CheckToken::class])
-    ->put('/accounts/{id}', Users\UpdateAccountController::class, [CheckToken::class]);
+    ->put('/accounts/{id}', Users\UpdateAccountController::class, [CheckToken::class])
+    ->delete('/accounts/{id}', Users\DeleteAccountController::class, [CheckToken::class]);

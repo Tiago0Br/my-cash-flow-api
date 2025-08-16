@@ -19,7 +19,7 @@ readonly class AccountRepositoryFromPdo implements AccountRepositoryInterface
     public function create(Account $account): void
     {
         $sql = <<<SQL
-            INSERT INTO accounts (name, type, user_id, created_at) VALUES (:NAME, :TYPE, :USER_ID)
+            INSERT INTO accounts (name, type, user_id, created_at) VALUES (:NAME, :TYPE, :USER_ID, :CREATED_AT)
         SQL;
 
         $stmt = $this->db->prepare($sql);
@@ -80,5 +80,17 @@ readonly class AccountRepositoryFromPdo implements AccountRepositoryInterface
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return array_map(fn (array $account) => Account::createFromDatabaseReturn($account), $data);
+    }
+
+    public function delete(Account $account): void
+    {
+        $sql = <<<SQL
+            DELETE FROM accounts WHERE id = :ID AND user_id = :USER_ID
+        SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(param: 'ID', value: $account->id, type: PDO::PARAM_INT);
+        $stmt->bindValue(param: 'USER_ID', value: $account->userId, type: PDO::PARAM_INT);
+        $stmt->execute();
     }
 }
