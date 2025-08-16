@@ -5,20 +5,26 @@ declare(strict_types=1);
 namespace Tiagolopes\MyCashFlowApi\Users\Application\Controller;
 
 use OpenApi\Attributes as OA;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Enum\StatusCode;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Interfaces\ControllerInterface;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Request;
-use Tiagolopes\MyCashFlowApi\Users\Domain\Dto\CreateAccountDto;
-use Tiagolopes\MyCashFlowApi\Users\Domain\Service\CreateAccount;
+use Tiagolopes\MyCashFlowApi\Users\Domain\Dto\UpdateAccountDto;
+use Tiagolopes\MyCashFlowApi\Users\Domain\Service\UpdateAccount;
 
-class CreateAccountController implements ControllerInterface
+class UpdateAccountController implements ControllerInterface
 {
-    #[OA\Post(
-        path: '/accounts',
-        summary: 'Create a new account',
+    #[OA\Put(
+        path: '/accounts/{id}',
+        summary: 'Update an existing account',
         security: [['bearerAuth' => []]],
         tags: ['Accounts']
+    )]
+    #[OA\Parameter(
+        name: 'id',
+        description: 'Account ID to update',
+        in: 'path',
+        required: true,
+        schema: new OA\Schema(type: 'integer', example: 1)
     )]
     #[OA\RequestBody(
         required: true,
@@ -29,15 +35,15 @@ class CreateAccountController implements ControllerInterface
                     properties: [
                         new OA\Property(
                             property: 'name',
-                            description: 'Name of the account',
+                            description: 'Updated name of the account',
                             type: 'string',
-                            example: 'Conta Corrente'
+                            example: 'Conta Poupança Atualizada'
                         ),
                         new OA\Property(
                             property: 'type',
-                            description: 'Type of the account (e.g., checking, savings, investment)',
+                            description: 'Updated type of the account (e.g., checking, savings, investment)',
                             type: 'string',
-                            example: 'checking'
+                            example: 'savings'
                         )
                     ]
                 )
@@ -45,8 +51,8 @@ class CreateAccountController implements ControllerInterface
         ),
     )]
     #[OA\Response(
-        response: 201,
-        description: 'Account created successfully',
+        response: 200,
+        description: 'Account updated successfully',
         content: new OA\JsonContent(
             allOf: [
                 new OA\Schema(
@@ -54,7 +60,7 @@ class CreateAccountController implements ControllerInterface
                         new OA\Property(
                             property: 'message',
                             type: 'string',
-                            example: 'Account created successfully',
+                            example: 'Account updated successfully',
                         )
                     ],
                 )
@@ -72,6 +78,23 @@ class CreateAccountController implements ControllerInterface
                             property: 'error',
                             type: 'string',
                             example: 'Unauthorized.',
+                        )
+                    ],
+                )
+            ],
+        ),
+    )]
+    #[OA\Response(
+        response: 404,
+        description: 'Account not found or not owned by user',
+        content: new OA\JsonContent(
+            allOf: [
+                new OA\Schema(
+                    properties: [
+                        new OA\Property(
+                            property: 'error',
+                            type: 'string',
+                            example: 'Account with id \'1\' not found',
                         )
                     ],
                 )
@@ -97,15 +120,18 @@ class CreateAccountController implements ControllerInterface
     )]
     public function processRequest(Container $container, Request $request): void
     {
-        $createAccountDto = CreateAccountDto::fromArray($request->body);
-        $user           = $request->getLoggedUser();
+        $user             = $request->getLoggedUser();
+        $updateAccountDto = UpdateAccountDto::fromArray(array_merge(
+            $request->body,
+            $request->params
+        ));
 
-        /** @var CreateAccount $createAccount */
-        $createAccount = $container->get(CreateAccount::class);
-        $createAccount->create(createAccountDto: $createAccountDto, userId: $user->id);
+        /** @var UpdateAccount $updateAccount */
+        $updateAccount = $container->get(UpdateAccount::class);
+        $updateAccount->update(updateAccountDto: $updateAccountDto, userId: $user->id);
 
         sendResponse([
-            'message' => 'Account created successfully',
-        ], StatusCode::CREATED);
+            'message' => 'Account updated successfully',
+        ]);
     }
 }

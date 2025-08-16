@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tiagolopes\MyCashFlowApi\Users\Domain\Dto;
 
-readonly class SaveAccountDto
+readonly class CreateAccountDto
 {
     private function __construct(
         public string $name,

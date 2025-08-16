@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Tiagolopes\MyCashFlowApi\Users\Domain\Entity;
 
 use JsonSerializable;
-use Tiagolopes\MyCashFlowApi\Users\Domain\Dto\SaveAccountDto;
+use Tiagolopes\MyCashFlowApi\Users\Domain\Dto\CreateAccountDto;
+use Tiagolopes\MyCashFlowApi\Users\Domain\Dto\UpdateAccountDto;
 
 class Account implements JsonSerializable
 {
@@ -17,12 +18,12 @@ class Account implements JsonSerializable
     ) {
     }
 
-    public static function create(SaveAccountDto $saveAccountDto, int $userId): self
+    public static function create(CreateAccountDto $createAccountDto, int $userId): self
     {
         return new self(
             id: null,
-            name: $saveAccountDto->name,
-            type: $saveAccountDto->type,
+            name: $createAccountDto->name,
+            type: $createAccountDto->type,
             userId: $userId
         );
     }
@@ -37,10 +38,10 @@ class Account implements JsonSerializable
         );
     }
 
-    public function update(SaveAccountDto $saveAccountDto): void
+    public function update(UpdateAccountDto $updateAccountDto): void
     {
-        $this->name = $saveAccountDto->name;
-        $this->type = $saveAccountDto->type;
+        $this->name = $updateAccountDto->name;
+        $this->type = $updateAccountDto->type;
     }
 
     public function jsonSerialize(): array

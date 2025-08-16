@@ -10,4 +10,5 @@ $app
     ->post('/users', Users\CreateUserController::class)
     ->post('/login', Users\LoginController::class)
     ->post('/accounts', Users\CreateAccountController::class, [CheckToken::class])
-    ->get('/accounts', Users\GetAccountsController::class, [CheckToken::class]);
+    ->get('/accounts', Users\GetAccountsController::class, [CheckToken::class])
+    ->put('/accounts/{id}', Users\UpdateAccountController::class, [CheckToken::class]);
