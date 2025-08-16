@@ -3,7 +3,7 @@
 use Tiagolopes\MyCashFlowApi\Core\Application\Controller\ApiDocumentationController;
 use Tiagolopes\MyCashFlowApi\Core\Application\Controller\SwaggerDocumentationController;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\App;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Middlewares\ErrorHandler;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\ErrorHandler;
 
 $app = App::getInstance();
 

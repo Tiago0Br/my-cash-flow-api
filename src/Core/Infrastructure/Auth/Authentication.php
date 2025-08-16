@@ -7,6 +7,7 @@ namespace Tiagolopes\MyCashFlowApi\Core\Infrastructure\Auth;
 use RuntimeException;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Auth\AuthenticationInterface;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Entity\Session;
+use Tiagolopes\MyCashFlowApi\Core\Domain\Exception\UnauthorizedException;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Repository\SessionRepository;
 
 readonly class Authentication implements AuthenticationInterface
@@ -30,8 +31,19 @@ readonly class Authentication implements AuthenticationInterface
         return $token;
     }
 
-    public function verifyToken(string $token): void
+    public function verifyToken(string $token): int
     {
-        // TODO: implement token verification
+        $session = $this->sessionRepository->findByToken($token);
+
+        if (!$session) {
+            throw UnauthorizedException::create();
+        }
+
+        if (strtotime($session->expiresAt) < time()) {
+            $this->sessionRepository->delete($session->id);
+            throw UnauthorizedException::create('Token expired.');
+        }
+
+        return $session->userId;
     }
 }

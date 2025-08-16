@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Middlewares;
+namespace Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http;
 
 use DomainException;
 use InvalidArgumentException;

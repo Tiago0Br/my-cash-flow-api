@@ -25,4 +25,14 @@ readonly class Session
             expiresAt: date(format: 'Y-m-d H:i:s', timestamp: time() + $_ENV['TOKEN_EXPIRATION_TIME'])
         );
     }
+
+    public static function createFromDatabaseReturn(array $data): self
+    {
+        return new self(
+            id: $data['id'],
+            token: $data['token'],
+            userId: $data['user_id'],
+            expiresAt: $data['expires_at']
+        );
+    }
 }

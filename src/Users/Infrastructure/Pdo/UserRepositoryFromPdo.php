@@ -7,6 +7,7 @@ namespace Tiagolopes\MyCashFlowApi\Users\Infrastructure\Pdo;
 use PDO;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Database\Connection;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Entity\User;
+use Tiagolopes\MyCashFlowApi\Users\Domain\Exception\UserNotFound;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Repository\UserRepositoryInterface;
 
 readonly class UserRepositoryFromPdo implements UserRepositoryInterface
@@ -29,7 +30,7 @@ readonly class UserRepositoryFromPdo implements UserRepositoryInterface
         $stmt->execute();
     }
 
-    public function findUserByEmail(string $email): ?User
+    public function findByEmail(string $email): ?User
     {
         $sql = <<<SQL
             SELECT * FROM users WHERE email = :EMAIL
@@ -40,8 +41,27 @@ readonly class UserRepositoryFromPdo implements UserRepositoryInterface
         $stmt->execute();
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (! $data) {
+        if (! is_array($data) || empty($data)) {
             return null;
+        }
+
+        return User::createFromDatabaseReturn($data);
+    }
+
+    public function getById(int $id): User
+    {
+        $sql = <<<SQL
+            SELECT * FROM users WHERE id = :ID
+            LIMIT 1
+        SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(param: 'ID', value: $id, type: PDO::PARAM_INT);
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (! is_array($data) || empty($data)) {
+            throw UserNotFound::byId($id);
         }
 
         return User::createFromDatabaseReturn($data);

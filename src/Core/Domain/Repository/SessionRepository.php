@@ -9,4 +9,8 @@ use Tiagolopes\MyCashFlowApi\Core\Domain\Entity\Session;
 interface SessionRepository
 {
     public function store(Session $session): void;
+
+    public function findByToken(string $token): ?Session;
+
+    public function delete(string $sessionId): void;
 }

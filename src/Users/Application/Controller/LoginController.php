@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tiagolopes\MyCashFlowApi\Users\Application\Controller;
 
 use OpenApi\Attributes as OA;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Dto\RequestDto;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Interfaces\ControllerInterface;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Request;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Dto\LoginDto;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Service\Login;
 
@@ -87,7 +87,7 @@ class LoginController implements ControllerInterface
             ],
         ),
     )]
-    public function processRequest(Container $container, RequestDto $request): void
+    public function processRequest(Container $container, Request $request): void
     {
         $loginDto = LoginDto::fromArray($request->body);
 

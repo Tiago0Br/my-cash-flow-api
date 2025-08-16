@@ -19,7 +19,7 @@ readonly class Login
 
     public function execute(string $email, string $password): UserWithTokenDto
     {
-        $user = $this->userRepository->findUserByEmail($email);
+        $user = $this->userRepository->findByEmail($email);
         if (! $user || ! password_verify($password, $user->password)) {
             throw InvalidCredentials::create();
         }

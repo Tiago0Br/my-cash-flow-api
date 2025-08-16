@@ -8,5 +8,5 @@ interface AuthenticationInterface
 {
     public function generateToken(int $userId): string;
 
-    public function verifyToken(string $token): void;
+    public function verifyToken(string $token): int;
 }

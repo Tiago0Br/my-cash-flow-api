@@ -8,7 +8,7 @@ use DomainException;
 
 class UnauthorizedException extends DomainException
 {
-    public static function create(?string $message): self
+    public static function create(?string $message = null): self
     {
         $defaultMessage = 'Unauthorized.';
 

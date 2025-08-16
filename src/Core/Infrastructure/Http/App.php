@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http;
 
 use RuntimeException;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Dto\RequestDto;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Exception\NotFoundException;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Interfaces\ControllerInterface;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Interfaces\MiddlewareInterface;
@@ -146,9 +145,9 @@ class App
         }, $middlewares);
     }
 
-    private function getRequest(array $routeParams = []): RequestDto
+    private function getRequest(array $routeParams = []): Request
     {
-        return RequestDto::create(
+        return Request::create(
             headers: getallheaders() ?: [],
             params: $routeParams,
             query: $_GET,

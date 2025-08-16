@@ -18,7 +18,7 @@ readonly class CreateUser
 
     public function create(SaveUserDto $saveUserDto): User
     {
-        $userAlreadyExists = $this->userRepository->findUserByEmail($saveUserDto->email);
+        $userAlreadyExists = $this->userRepository->findByEmail($saveUserDto->email);
         if ($userAlreadyExists) {
             throw EmailAlreadyRegistered::fromEmail($saveUserDto->email);
         }

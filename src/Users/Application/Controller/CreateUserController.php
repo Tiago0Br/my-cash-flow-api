@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Tiagolopes\MyCashFlowApi\Users\Application\Controller;
 
 use OpenApi\Attributes as OA;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Dto\RequestDto;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Enum\StatusCode;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Interfaces\ControllerInterface;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Request;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Dto\SaveUserDto;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Service\CreateUser;
 
@@ -85,7 +85,7 @@ class CreateUserController implements ControllerInterface
             ],
         ),
     )]
-    public function processRequest(Container $container, RequestDto $request): void
+    public function processRequest(Container $container, Request $request): void
     {
         $createUserDto = SaveUserDto::fromArray($request->body);
 

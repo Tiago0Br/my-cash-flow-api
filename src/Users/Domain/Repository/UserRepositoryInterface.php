@@ -10,5 +10,7 @@ interface UserRepositoryInterface
 {
     public function create(User $user): void;
 
-    public function findUserByEmail(string $email): ?User;
+    public function findByEmail(string $email): ?User;
+
+    public function getById(int $id): User;
 }

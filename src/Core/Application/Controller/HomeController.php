@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tiagolopes\MyCashFlowApi\Core\Application\Controller;
 
 use OpenApi\Attributes as OA;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Dto\RequestDto;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Interfaces\ControllerInterface;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Request;
 
 class HomeController implements ControllerInterface
 {
@@ -32,7 +32,7 @@ class HomeController implements ControllerInterface
             ],
         ),
     )]
-    public function processRequest(Container $container, RequestDto $request): void
+    public function processRequest(Container $container, Request $request): void
     {
         sendResponse([
             'message' => 'API running!',
