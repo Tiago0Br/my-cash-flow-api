@@ -9,4 +9,7 @@ use Tiagolopes\MyCashFlowApi\Users\Domain\Entity\Account;
 interface AccountRepositoryInterface
 {
     public function create(Account $account): void;
+
+    /** @return array<Account> */
+    public function findAllByUserId(int $userId): array;
 }

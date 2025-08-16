@@ -27,4 +27,18 @@ readonly class AccountRepositoryFromPdo implements AccountRepositoryInterface
         $stmt->bindValue(param: 'USER_ID', value: $account->userId, type: PDO::PARAM_INT);
         $stmt->execute();
     }
+
+    public function findAllByUserId(int $userId): array
+    {
+        $sql = <<<SQL
+            SELECT * FROM accounts WHERE user_id = :USER_ID
+        SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(param: 'USER_ID', value: $userId, type: PDO::PARAM_INT);
+        $stmt->execute();
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return array_map(fn (array $account) => Account::createFromDatabaseReturn($account), $data);
+    }
 }
