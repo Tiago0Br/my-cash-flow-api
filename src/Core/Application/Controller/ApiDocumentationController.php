@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tiagolopes\MyCashFlowApi\Core\Application\Controller;
 
 use OpenApi\Generator;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Interfaces\ControllerInterface;
+use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ControllerInterface;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Request;
 

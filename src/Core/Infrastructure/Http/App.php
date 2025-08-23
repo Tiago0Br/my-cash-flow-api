@@ -6,8 +6,8 @@ namespace Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http;
 
 use RuntimeException;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Exception\NotFoundException;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Interfaces\ControllerInterface;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Interfaces\MiddlewareInterface;
+use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ControllerInterface;
+use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\MiddlewareInterface;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
 
 class App

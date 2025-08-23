@@ -1,6 +1,6 @@
 <?php
 
-namespace Tiagolopes\MyCashFlowApi\Core\Domain\Interfaces;
+namespace Tiagolopes\MyCashFlowApi\Core\Domain\Contracts;
 
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Request;
