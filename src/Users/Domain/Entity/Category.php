@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tiagolopes\MyCashFlowApi\Users\Domain\Entity;
 
 use JsonSerializable;
+use Tiagolopes\MyCashFlowApi\Users\Domain\Dto\CreateCategoryDto;
 
 class Category implements JsonSerializable
 {
@@ -13,6 +14,15 @@ class Category implements JsonSerializable
         private(set) string $title,
         private(set) string $type,
     ) {
+    }
+
+    public static function create(CreateCategoryDto $createCategoryDto): self
+    {
+        return new self(
+            id: null,
+            title: $createCategoryDto->title,
+            type: $createCategoryDto->type
+        );
     }
 
     public static function createFromDatabaseReturn(array $data): self

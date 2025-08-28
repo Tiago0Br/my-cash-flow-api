@@ -13,4 +13,5 @@ $app
     ->get('/accounts', Users\GetAccountsController::class, [CheckToken::class])
     ->put('/accounts/{id}', Users\UpdateAccountController::class, [CheckToken::class])
     ->delete('/accounts/{id}', Users\DeleteAccountController::class, [CheckToken::class])
-    ->get('/categories', Users\GetCategoriesController::class, [CheckToken::class]);
+    ->get('/categories', Users\GetCategoriesController::class, [CheckToken::class])
+    ->post('/categories', Users\CreateCategoryController::class, [CheckToken::class]);

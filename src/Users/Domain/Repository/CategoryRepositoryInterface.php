@@ -10,4 +10,6 @@ interface CategoryRepositoryInterface
 {
     /** @return Category[] */
     public function getAll(): array;
+
+    public function create(Category $category): void;
 }

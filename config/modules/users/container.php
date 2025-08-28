@@ -9,6 +9,7 @@ use Tiagolopes\MyCashFlowApi\Users\Domain\Repository\AccountRepositoryInterface;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Repository\CategoryRepositoryInterface;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Repository\UserRepositoryInterface;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Service\CreateAccount;
+use Tiagolopes\MyCashFlowApi\Users\Domain\Service\CreateCategory;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Service\CreateUser;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Service\DeleteAccount;
 use Tiagolopes\MyCashFlowApi\Users\Domain\Service\Login;
@@ -63,6 +64,15 @@ $container->add(
     resolver: function () use ($container) {
         return new DeleteAccount(
             accountRepository: $container->get(AccountRepositoryInterface::class)
+        );
+    }
+);
+
+$container->add(
+    item: CreateCategory::class,
+    resolver: function () use ($container) {
+        return new CreateCategory(
+            categoryRepository: $container->get(CategoryRepositoryInterface::class)
         );
     }
 );
