@@ -94,6 +94,23 @@ use Tiagolopes\MyCashFlowApi\Users\Domain\Service\CreateCategory;
         ],
     ),
 )]
+#[OA\Response(
+    response: 409,
+    description: 'Conflict - Category already exists',
+    content: new OA\JsonContent(
+        allOf: [
+            new OA\Schema(
+                properties: [
+                    new OA\Property(
+                        property: 'error',
+                        type: 'string',
+                        example: "Category with title 'Alimentação' already exists for the type 'expense'."
+                    )
+                ],
+            )
+        ],
+    )
+)]
 class CreateCategoryController implements ControllerInterface
 {
     public function processRequest(Container $container, Request $request): void

@@ -32,4 +32,20 @@ readonly class CategoryRepositoryFromPdo implements CategoryRepositoryInterface
         $stmt->bindValue(':TYPE', $category->type);
         $stmt->execute();
     }
+
+    public function findByTitleAndType(string $title, string $type): ?Category
+    {
+        $sql = 'SELECT * FROM categories WHERE title = :TITLE AND type = :TYPE';
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':TITLE', $title);
+        $stmt->bindValue(':TYPE', $type);
+        $stmt->execute();
+        $category = $stmt->fetch();
+        if (! is_array($category) || empty($category)) {
+            return null;
+        }
+
+        return Category::createFromDatabaseReturn($category);
+    }
 }
