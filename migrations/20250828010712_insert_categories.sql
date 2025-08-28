@@ -3,13 +3,13 @@
 
 INSERT INTO categories (title, type) VALUES
 ('Alimentação', 'expense'),
-('Transporte', 'income'),
-('Moradia', 'income'),
-('Educação', 'income'),
-('Lazer', 'income'),
-('Vestuário', 'income'),
-('Outros', 'income'),
-('Salário', 'expense'),
-('Investimentos', 'expense'),
-('Freelance', 'expense'),
-('Outros', 'expense');
+('Transporte', 'expense'),
+('Moradia', 'expense'),
+('Educação', 'expense'),
+('Lazer', 'expense'),
+('Vestuário', 'expense'),
+('Outros', 'expense'),
+('Salário', 'income'),
+('Investimentos', 'income'),
+('Freelance', 'income'),
+('Outros', 'income');
