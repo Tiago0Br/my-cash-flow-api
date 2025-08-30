@@ -6,4 +6,6 @@ use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\App;
 $app = App::getInstance();
 
 $app
-    ->get('/', Core\HomeController::class);
+    ->get('/', Core\HomeController::class)
+    ->post('/users', Core\CreateUserController::class)
+    ->post('/login', Core\LoginController::class);

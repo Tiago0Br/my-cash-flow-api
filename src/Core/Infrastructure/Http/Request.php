@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http;
 
+use Tiagolopes\MyCashFlowApi\Core\Domain\Entity\User;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Exception\UnauthorizedException;
-use Tiagolopes\MyCashFlowApi\Users\Domain\Entity\User;
 
 class Request
 {

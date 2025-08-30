@@ -1,0 +1,31 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tiagolopes\MyCashFlowApi\Core\Domain\Dto;
+
+use Tiagolopes\MyCashFlowApi\Core\Domain\Validation\Email;
+use Tiagolopes\MyCashFlowApi\Core\Domain\Validation\Required;
+use Tiagolopes\MyCashFlowApi\Core\Domain\Validation\Text;
+use Tiagolopes\MyCashFlowApi\Core\Domain\Validation\Validator;
+
+readonly class LoginDto
+{
+    private function __construct(
+        #[Required, Email]
+        public string $email,
+        #[Required, Text]
+        public string $password
+    ) {
+    }
+
+    public static function fromArray(array $params): self
+    {
+        Validator::validate(self::class, $params);
+
+        return new self(
+            email: $params['email'],
+            password: $params['password']
+        );
+    }
+}

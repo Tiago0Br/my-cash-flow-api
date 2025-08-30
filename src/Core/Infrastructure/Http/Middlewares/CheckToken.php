@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Middlewares;
 
 use Tiagolopes\MyCashFlowApi\Core\Domain\Auth\AuthenticationInterface;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Exception\UnauthorizedException;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\MiddlewareInterface;
+use Tiagolopes\MyCashFlowApi\Core\Domain\Exception\UnauthorizedException;
+use Tiagolopes\MyCashFlowApi\Core\Domain\Repository\UserRepositoryInterface;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Request;
-use Tiagolopes\MyCashFlowApi\Users\Domain\Repository\UserRepositoryInterface;
 
 class CheckToken implements MiddlewareInterface
 {
@@ -21,7 +21,7 @@ class CheckToken implements MiddlewareInterface
         $authentication = $container->get(AuthenticationInterface::class);
         $userId         = $authentication->verifyToken($token);
 
-        /** @var UserRepositoryInterface $userRepository */
+        /** @var \Tiagolopes\MyCashFlowApi\Core\Domain\Repository\UserRepositoryInterface $userRepository */
         $userRepository = $container->get(UserRepositoryInterface::class);
         $user           = $userRepository->getById($userId);
 
