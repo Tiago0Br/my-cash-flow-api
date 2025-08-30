@@ -65,6 +65,14 @@ class App
         return $this;
     }
 
+    public function group(string $prefix, array $middlewares, callable $callback): self
+    {
+        $group = new RouteGroup(app: $this, prefix: $prefix, middlewares: $middlewares);
+        $callback($group);
+
+        return $this;
+    }
+
     public function run(): void
     {
         $httpMethod = $_POST['method'] ?? $_SERVER['REQUEST_METHOD'];
@@ -75,14 +83,9 @@ class App
             throw NotFoundException::create();
         }
 
-        $routeInfo        = $route['info'];
-        $routeParams      = $route['params'];
-        $controllerClass  = $routeInfo['controller'];
-        $middlewaresArray = $routeInfo['middlewares'];
-
-        $middlewares   = $this->getMiddlewares(middlewares: $middlewaresArray);
-        $controller    = $this->getController(controllerClass: $controllerClass);
-        $requestParams = $this->getRequest(routeParams: $routeParams);
+        $middlewares   = $this->getMiddlewares(middlewares: $route->middlewares);
+        $controller    = $this->getController(controllerClass: $route->controller);
+        $requestParams = $this->getRequest(routeParams: $route->params);
         $container     = Container::getInstance();
 
         foreach ($middlewares as $middleware) {
@@ -92,7 +95,7 @@ class App
         $controller->processRequest($container, $requestParams);
     }
 
-    private function searchRoute(string $httpMethod, string $uri): ?array
+    private function searchRoute(string $httpMethod, string $uri): ?Route
     {
         $matchedRoute = null;
         $routeParams  = [];
@@ -107,10 +110,11 @@ class App
         }
 
         return $matchedRoute
-            ? [
-                'info'   => $matchedRoute,
-                'params' => $routeParams,
-            ]
+            ? Route::create(
+                controller: $matchedRoute['controller'],
+                params: $routeParams,
+                middlewares: $matchedRoute['middlewares']
+            )
             : null;
     }
 
