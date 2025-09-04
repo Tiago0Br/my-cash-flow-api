@@ -21,7 +21,7 @@ class CheckToken implements MiddlewareInterface
         $authentication = $container->get(AuthenticationInterface::class);
         $userId         = $authentication->verifyToken($token);
 
-        /** @var \Tiagolopes\MyCashFlowApi\Core\Domain\Repository\UserRepositoryInterface $userRepository */
+        /** @var UserRepositoryInterface $userRepository */
         $userRepository = $container->get(UserRepositoryInterface::class);
         $user           = $userRepository->getById($userId);
 

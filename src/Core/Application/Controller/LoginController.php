@@ -9,7 +9,7 @@ use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ControllerInterface;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Dto\LoginDto;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Service\Login;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Request;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\{Request, Response};
 
 class LoginController implements ControllerInterface
 {
@@ -87,7 +87,7 @@ class LoginController implements ControllerInterface
             ],
         ),
     )]
-    public function processRequest(Container $container, Request $request): void
+    public function processRequest(Container $container, Request $request, Response $response): void
     {
         $loginDto = LoginDto::fromArray($request->body);
 
@@ -95,7 +95,7 @@ class LoginController implements ControllerInterface
         $login  = $container->get(Login::class);
         $result = $login->execute($loginDto->email, $loginDto->password);
 
-        sendResponse([
+        $response->send([
             'user'  => $result->user->jsonSerialize(),
             'token' => $result->token,
         ]);

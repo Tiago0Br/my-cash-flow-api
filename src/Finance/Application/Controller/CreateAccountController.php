@@ -8,7 +8,7 @@ use OpenApi\Attributes as OA;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Enum\StatusCode;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ControllerInterface;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Request;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\{Request, Response};
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Dto\CreateAccountDto;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\CreateAccount;
 
@@ -95,7 +95,7 @@ class CreateAccountController implements ControllerInterface
             ],
         ),
     )]
-    public function processRequest(Container $container, Request $request): void
+    public function processRequest(Container $container, Request $request, Response $response): void
     {
         $createAccountDto = CreateAccountDto::fromArray($request->body);
         $user           = $request->getLoggedUser();
@@ -104,7 +104,7 @@ class CreateAccountController implements ControllerInterface
         $createAccount = $container->get(CreateAccount::class);
         $createAccount->create(createAccountDto: $createAccountDto, userId: $user->id);
 
-        sendResponse([
+        $response->send([
             'message' => 'Account created successfully',
         ], StatusCode::CREATED);
     }

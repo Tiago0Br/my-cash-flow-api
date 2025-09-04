@@ -7,7 +7,7 @@ namespace Tiagolopes\MyCashFlowApi\Finance\Application\Controller;
 use OpenApi\Attributes as OA;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ControllerInterface;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Request;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\{Request, Response};
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Repository\AccountRepositoryInterface;
 
 class GetAccountsController implements ControllerInterface
@@ -60,7 +60,7 @@ class GetAccountsController implements ControllerInterface
             ],
         ),
     )]
-    public function processRequest(Container $container, Request $request): void
+    public function processRequest(Container $container, Request $request, Response $response): void
     {
         $user = $request->getLoggedUser();
 
@@ -68,7 +68,7 @@ class GetAccountsController implements ControllerInterface
         $accountRepository = $container->get(AccountRepositoryInterface::class);
         $accounts          = $accountRepository->findAllByUserId($user->id);
 
-        sendResponse([
+        $response->send([
             'accounts' => array_map(fn($account) => $account->jsonSerialize(), $accounts),
         ]);
     }

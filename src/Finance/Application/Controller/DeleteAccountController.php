@@ -7,7 +7,7 @@ namespace Tiagolopes\MyCashFlowApi\Finance\Application\Controller;
 use OpenApi\Attributes as OA;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ControllerInterface;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Request;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\{Request, Response};
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\DeleteAccount;
 
 #[OA\Delete(
@@ -93,7 +93,7 @@ use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\DeleteAccount;
 )]
 class DeleteAccountController implements ControllerInterface
 {
-    public function processRequest(Container $container, Request $request): void
+    public function processRequest(Container $container, Request $request, Response $response): void
     {
         $accountId = (int) $request->params['id'];
         $user      = $request->getLoggedUser();
@@ -102,7 +102,7 @@ class DeleteAccountController implements ControllerInterface
         $deleteAccount = $container->get(DeleteAccount::class);
         $deleteAccount->delete(accountId: $accountId, userId: $user->id);
 
-        sendResponse([
+        $response->send([
             'message' => 'Account deleted successfully',
         ]);
     }

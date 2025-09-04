@@ -83,16 +83,17 @@ class App
             throw NotFoundException::create();
         }
 
-        $middlewares   = $this->getMiddlewares(middlewares: $route->middlewares);
-        $controller    = $this->getController(controllerClass: $route->controller);
-        $requestParams = $this->getRequest(routeParams: $route->params);
-        $container     = Container::getInstance();
+        $middlewares = $this->getMiddlewares(middlewares: $route->middlewares);
+        $controller  = $this->getController(controllerClass: $route->controller);
+        $request     = $this->getRequest(routeParams: $route->params);
+        $response    = new Response();
+        $container   = Container::getInstance();
 
         foreach ($middlewares as $middleware) {
-            $middleware->handle($container, $requestParams);
+            $middleware->handle($container, $request);
         }
 
-        $controller->processRequest($container, $requestParams);
+        $controller->processRequest($container, $request, $response);
     }
 
     private function searchRoute(string $httpMethod, string $uri): ?Route

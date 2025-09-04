@@ -7,11 +7,11 @@ namespace Tiagolopes\MyCashFlowApi\Core\Application\Controller;
 use OpenApi\Generator;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ControllerInterface;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Request;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\{Request, Response};
 
 class ApiDocumentationController implements ControllerInterface
 {
-    public function processRequest(Container $container, Request $request): void
+    public function processRequest(Container $container, Request $request, Response $response): void
     {
         $openapi = new Generator()->generate([
             __DIR__ . '/../../Domain/OpenApi',
@@ -19,8 +19,6 @@ class ApiDocumentationController implements ControllerInterface
             __DIR__ . '/../../../Finance/Application/Controller'
         ]);
 
-        sendResponse(
-            $openapi->toJson(),
-        );
+        $response->send($openapi->toJson());
     }
 }

@@ -7,7 +7,7 @@ namespace Tiagolopes\MyCashFlowApi\Finance\Application\Controller;
 use OpenApi\Attributes as OA;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ControllerInterface;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Request;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\{Request, Response};
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Dto\UpdateAccountDto;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\UpdateAccount;
 
@@ -118,7 +118,7 @@ class UpdateAccountController implements ControllerInterface
             ],
         ),
     )]
-    public function processRequest(Container $container, Request $request): void
+    public function processRequest(Container $container, Request $request, Response $response): void
     {
         $user             = $request->getLoggedUser();
         $updateAccountDto = UpdateAccountDto::fromArray(array_merge(
@@ -130,7 +130,7 @@ class UpdateAccountController implements ControllerInterface
         $updateAccount = $container->get(UpdateAccount::class);
         $updateAccount->update(updateAccountDto: $updateAccountDto, userId: $user->id);
 
-        sendResponse([
+        $response->send([
             'message' => 'Account updated successfully',
         ]);
     }

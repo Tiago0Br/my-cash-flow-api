@@ -10,7 +10,7 @@ use Tiagolopes\MyCashFlowApi\Core\Domain\Dto\SaveUserDto;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Enum\StatusCode;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Service\CreateUser;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Request;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\{Request, Response};
 
 class CreateUserController implements ControllerInterface
 {
@@ -85,7 +85,7 @@ class CreateUserController implements ControllerInterface
             ],
         ),
     )]
-    public function processRequest(Container $container, Request $request): void
+    public function processRequest(Container $container, Request $request, Response $response): void
     {
         $createUserDto = SaveUserDto::fromArray($request->body);
 
@@ -93,7 +93,7 @@ class CreateUserController implements ControllerInterface
         $createUser = $container->get(CreateUser::class);
         $createUser->create($createUserDto);
 
-        sendResponse([
+        $response->send([
             'message' => 'User created successfully',
         ], StatusCode::CREATED);
     }

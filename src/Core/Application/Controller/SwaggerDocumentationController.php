@@ -7,11 +7,11 @@ namespace Tiagolopes\MyCashFlowApi\Core\Application\Controller;
 use RuntimeException;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ControllerInterface;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Request;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\{Request, Response};
 
 class SwaggerDocumentationController implements ControllerInterface
 {
-    public function processRequest(Container $container, Request $request): void
+    public function processRequest(Container $container, Request $request, Response $response): void
     {
         $swaggerFile = __DIR__ . '/../../../../public/swagger-ui.php';
 
@@ -23,7 +23,7 @@ class SwaggerDocumentationController implements ControllerInterface
         require_once $swaggerFile;
         $content = ob_get_clean();
 
-        sendResponse(
+        $response->send(
             data: $content,
             contentType: 'text/html'
         );

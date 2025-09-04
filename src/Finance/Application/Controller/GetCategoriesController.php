@@ -7,7 +7,7 @@ namespace Tiagolopes\MyCashFlowApi\Finance\Application\Controller;
 use OpenApi\Attributes as OA;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ControllerInterface;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Request;
+use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\{Request, Response};
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Repository\CategoryRepositoryInterface;
 
 #[OA\Get(
@@ -60,13 +60,13 @@ use Tiagolopes\MyCashFlowApi\Finance\Domain\Repository\CategoryRepositoryInterfa
 )]
 class GetCategoriesController implements ControllerInterface
 {
-    public function processRequest(Container $container, Request $request): void
+    public function processRequest(Container $container, Request $request, Response $response): void
     {
         /** @var CategoryRepositoryInterface $categoryRepository */
         $categoryRepository = $container->get(CategoryRepositoryInterface::class);
         $categories         = $categoryRepository->getAll();
 
-        sendResponse([
+        $response->send([
             'categories' => array_map(fn ($category) => $category->jsonSerialize(), $categories),
         ]);
     }
