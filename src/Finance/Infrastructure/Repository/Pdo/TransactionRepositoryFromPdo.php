@@ -34,12 +34,15 @@ readonly class TransactionRepositoryFromPdo implements TransactionRepositoryInte
         $stmt->execute();
     }
 
-    public function getAll(PaginationDto $paginationDto): array
+    public function getAll(PaginationDto $paginationDto, int $userId): array
     {
         $sql = <<<SQL
-            SELECT id, title, amount, type, transaction_date, category_id, account_id
-            FROM transactions
-            ORDER BY transaction_date DESC
+            SELECT t.id, t.title, t.amount, t.type, t.transaction_date, t.category_id, t.account_id
+            FROM transactions t
+            INNER JOIN accounts a
+                ON t.account_id = a.id
+            WHERE a.user_id = :USER_ID
+            ORDER BY t.transaction_date DESC
             LIMIT :LIMIT
             OFFSET :OFFSET
         SQL;
@@ -47,6 +50,7 @@ readonly class TransactionRepositoryFromPdo implements TransactionRepositoryInte
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(param: ':LIMIT', value: $paginationDto->limit, type: PDO::PARAM_INT);
         $stmt->bindValue(param: ':OFFSET', value: $paginationDto->offset, type: PDO::PARAM_INT);
+        $stmt->bindValue(param: ':USER_ID', value: $userId, type: PDO::PARAM_INT);
         $stmt->execute();
 
         return array_map(

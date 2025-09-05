@@ -87,11 +87,12 @@ class GetAllTransactionsController implements ControllerInterface
 {
     public function processRequest(Container $container, Request $request, Response $response): void
     {
+        $userId        = (int) $request->getLoggedUser()->id;
         $paginationDto = PaginationDto::fromArray($request->query);
 
         /** @var TransactionRepositoryInterface $transactionRepository */
         $transactionRepository = $container->get(TransactionRepositoryInterface::class);
-        $transactions          = $transactionRepository->getAll($paginationDto);
+        $transactions          = $transactionRepository->getAll(paginationDto: $paginationDto, userId: $userId);
 
         $response->send([
             'transactions' => array_map(

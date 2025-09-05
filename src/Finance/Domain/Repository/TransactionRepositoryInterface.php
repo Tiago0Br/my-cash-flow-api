@@ -12,5 +12,5 @@ interface TransactionRepositoryInterface
     public function create(Transaction $transaction): void;
 
     /** @return Transaction[] */
-    public function getAll(PaginationDto $paginationDto): array;
+    public function getAll(PaginationDto $paginationDto, int $userId): array;
 }
