@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tiagolopes\MyCashFlowApi\Finance\Infrastructure\Repository\Pdo;
 
 use PDO;
+use Tiagolopes\MyCashFlowApi\Core\Domain\Dto\PaginationDto;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Database\Connection;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Entity\Transaction;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Repository\TransactionRepositoryInterface;
@@ -31,5 +32,26 @@ readonly class TransactionRepositoryFromPdo implements TransactionRepositoryInte
         $stmt->bindValue(param: ':CATEGORY_ID', value:  $transaction->categoryId, type: PDO::PARAM_INT);
         $stmt->bindValue(param: ':ACCOUNT_ID', value:  $transaction->accountId, type: PDO::PARAM_INT);
         $stmt->execute();
+    }
+
+    public function getAll(PaginationDto $paginationDto): array
+    {
+        $sql = <<<SQL
+            SELECT id, title, amount, type, transaction_date, category_id, account_id
+            FROM transactions
+            ORDER BY transaction_date DESC
+            LIMIT :LIMIT
+            OFFSET :OFFSET
+        SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(param: ':LIMIT', value: $paginationDto->limit, type: PDO::PARAM_INT);
+        $stmt->bindValue(param: ':OFFSET', value: $paginationDto->offset, type: PDO::PARAM_INT);
+        $stmt->execute();
+
+        return array_map(
+            callback: fn (array $transaction) => Transaction::createFromDatabaseReturn($transaction),
+            array: $stmt->fetchAll(PDO::FETCH_ASSOC)
+        );
     }
 }

@@ -35,7 +35,7 @@ use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\CreateTransaction;
                     new OA\Property(
                         property: 'amount',
                         type: 'float',
-                        example: '150.75'
+                        example: 150.75
                     ),
                     new OA\Property(
                         property: 'type',
@@ -129,7 +129,7 @@ class CreateTransactionController implements ControllerInterface
 
         /** @var CreateTransaction $createTransaction */
         $createTransaction = $container->get(CreateTransaction::class);
-        $transaction       = $createTransaction->create($createTransactionDto);
+        $createTransaction->create($createTransactionDto);
 
         $response->send([
             'message' => 'Transaction created successfully',

@@ -23,5 +23,6 @@ $app->group('/categories', [CheckToken::class], function (RouteGroup $app) {
 });
 $app->group('/transactions', [CheckToken::class], function (RouteGroup $app) {
     $app
+        ->get('/', Finance\GetAllTransactionsController::class)
         ->post('/', Finance\CreateTransactionController::class);
 });

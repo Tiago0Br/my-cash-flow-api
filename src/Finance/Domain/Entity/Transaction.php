@@ -9,7 +9,7 @@ use Tiagolopes\MyCashFlowApi\Finance\Domain\Dto\CreateTransactionDto;
 class Transaction
 {
     private function __construct(
-        public readonly ?string $id,
+        public readonly ?int $id,
         private(set) string $title,
         private(set) ?string $description,
         private(set) float $amount,
@@ -30,7 +30,21 @@ class Transaction
             type: $createTransactionDto->type,
             transactionDate: $createTransactionDto->transactionDate,
             categoryId: $createTransactionDto->categoryId,
-            accountId: $createTransactionDto->accountId,
+            accountId: $createTransactionDto->accountId
+        );
+    }
+
+    public static function createFromDatabaseReturn(array $data): self
+    {
+        return new self(
+            id: $data['id'] ?? null,
+            title: $data['title'],
+            description: $data['description'] ?? null,
+            amount: (float) $data['amount'],
+            type: $data['type'],
+            transactionDate: $data['transaction_date'],
+            categoryId: (int) $data['category_id'],
+            accountId: isset($data['account_id']) ? (int) $data['account_id'] : null
         );
     }
 
