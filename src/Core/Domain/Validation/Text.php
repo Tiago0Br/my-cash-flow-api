@@ -11,8 +11,10 @@ use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ValidationInterface;
 #[Attribute(flags: Attribute::TARGET_PROPERTY)]
 class Text implements ValidationInterface
 {
-    public function __construct(public bool $allowEmpty = false)
-    {
+    public function __construct(
+        public bool $allowEmpty = false,
+        public ?int $maxLength = null,
+    ) {
     }
 
     public function validate(string $field, array $parameters): void
@@ -25,6 +27,10 @@ class Text implements ValidationInterface
 
         if (! $this->allowEmpty && trim(string: $parameters[$field]) === '') {
             throw new InvalidArgumentException("Field '$field' should be a not empty text.");
+        }
+
+        if ($this->maxLength !== null && strlen(string: $parameters[$field]) > $this->maxLength) {
+            throw new InvalidArgumentException("Field '$field' should not exceed $this->maxLength characters.");
         }
     }
 }

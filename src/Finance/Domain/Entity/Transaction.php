@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tiagolopes\MyCashFlowApi\Finance\Domain\Entity;
 
+use Tiagolopes\MyCashFlowApi\Finance\Domain\Dto\CreateTransactionDto;
+
 class Transaction
 {
     private function __construct(
@@ -16,6 +18,20 @@ class Transaction
         private(set) int $categoryId,
         private(set) ?int $accountId,
     ) {
+    }
+
+    public static function createFromDto(CreateTransactionDto $createTransactionDto): self
+    {
+        return new self(
+            id: null,
+            title: $createTransactionDto->title,
+            description: $createTransactionDto->description,
+            amount: $createTransactionDto->amount,
+            type: $createTransactionDto->type,
+            transactionDate: $createTransactionDto->transactionDate,
+            categoryId: $createTransactionDto->categoryId,
+            accountId: $createTransactionDto->accountId,
+        );
     }
 
     public function jsonSerialize(): array

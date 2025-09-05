@@ -6,12 +6,15 @@ use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Database\Connection;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Repository\AccountRepositoryInterface;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Repository\CategoryRepositoryInterface;
+use Tiagolopes\MyCashFlowApi\Finance\Domain\Repository\TransactionRepositoryInterface;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\CreateAccount;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\CreateCategory;
+use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\CreateTransaction;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\DeleteAccount;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\UpdateAccount;
 use Tiagolopes\MyCashFlowApi\Finance\Infrastructure\Repository\Pdo\AccountRepositoryFromPdo;
 use Tiagolopes\MyCashFlowApi\Finance\Infrastructure\Repository\Pdo\CategoryRepositoryFromPdo;
+use Tiagolopes\MyCashFlowApi\Finance\Infrastructure\Repository\Pdo\TransactionRepositoryFromPdo;
 
 $container = Container::getInstance();
 $db        = Connection::getInstance();
@@ -53,6 +56,15 @@ $container->add(
     }
 );
 
+$container->add(
+    item: CreateTransaction::class,
+    resolver: function () use ($container) {
+        return new CreateTransaction(
+            transactionRepository: $container->get(TransactionRepositoryInterface::class)
+        );
+    }
+);
+
 // Repository
 $container->add(
     item: AccountRepositoryInterface::class,
@@ -65,5 +77,12 @@ $container->add(
     item: CategoryRepositoryInterface::class,
     resolver: function () use ($db) {
         return new CategoryRepositoryFromPdo($db);
+    }
+);
+
+$container->add(
+    item: TransactionRepositoryInterface::class,
+    resolver: function () use ($db) {
+        return new TransactionRepositoryFromPdo($db);
     }
 );

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tiagolopes\MyCashFlowApi\Finance\Domain\Enum;
 
-enum CategoryType: string
+enum TransactionType: string
 {
     case INCOME  = 'income';
     case EXPENSE = 'expense';

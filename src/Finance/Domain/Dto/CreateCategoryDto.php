@@ -8,14 +8,14 @@ use Tiagolopes\MyCashFlowApi\Core\Domain\Validation\Options;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Validation\Required;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Validation\Text;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Validation\Validator;
-use Tiagolopes\MyCashFlowApi\Finance\Domain\Enum\CategoryType;
+use Tiagolopes\MyCashFlowApi\Finance\Domain\Enum\TransactionType;
 
 readonly class CreateCategoryDto
 {
     private function __construct(
         #[Required, Text]
         public string $title,
-        #[Required, Options(list: CategoryType::VALUES)]
+        #[Required, Options(list: TransactionType::VALUES)]
         public string $type
     ) {
     }
