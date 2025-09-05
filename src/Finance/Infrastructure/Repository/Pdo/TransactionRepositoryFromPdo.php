@@ -8,6 +8,7 @@ use PDO;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Dto\PaginationDto;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Database\Connection;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Entity\Transaction;
+use Tiagolopes\MyCashFlowApi\Finance\Domain\Exception\TransactionNotFound;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Repository\TransactionRepositoryInterface;
 
 readonly class TransactionRepositoryFromPdo implements TransactionRepositoryInterface
@@ -57,5 +58,29 @@ readonly class TransactionRepositoryFromPdo implements TransactionRepositoryInte
             callback: fn (array $transaction) => Transaction::createFromDatabaseReturn($transaction),
             array: $stmt->fetchAll(PDO::FETCH_ASSOC)
         );
+    }
+
+    public function getById(int $transactionId, int $userId): Transaction
+    {
+        $sql = <<<SQL
+            SELECT t.id, t.title, t.description, t.amount, t.type, t.transaction_date, t.category_id, t.account_id
+            FROM transactions t
+            INNER JOIN accounts a
+                ON t.account_id = a.id
+            WHERE t.id = :TRANSACTION_ID
+              AND a.user_id = :USER_ID
+        SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(param: ':TRANSACTION_ID', value: $transactionId, type: PDO::PARAM_INT);
+        $stmt->bindValue(param: ':USER_ID', value: $userId, type: PDO::PARAM_INT);
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (! is_array($data) || empty($data)) {
+            throw TransactionNotFound::fromId($transactionId);
+        }
+
+        return Transaction::createFromDatabaseReturn(data: $data);
     }
 }

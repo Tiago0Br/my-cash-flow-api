@@ -22,7 +22,7 @@ class Integer implements ValidationInterface
     {
         if (! isset($parameters[$field])) return;
 
-        if (! is_int(value: $parameters[$field])) {
+        if (! is_numeric(value: $parameters[$field]) || (int) $parameters[$field] != $parameters[$field]) {
             throw new InvalidArgumentException("Field '$field' should be an integer.");
         }
 
