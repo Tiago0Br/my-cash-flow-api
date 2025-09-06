@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tiagolopes\MyCashFlowApi\Finance\Domain\Entity;
 
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Dto\CreateTransactionDto;
+use Tiagolopes\MyCashFlowApi\Finance\Domain\Dto\UpdateTransactionDto;
 
 class Transaction
 {
@@ -32,6 +33,17 @@ class Transaction
             categoryId: $createTransactionDto->categoryId,
             accountId: $createTransactionDto->accountId
         );
+    }
+
+    public function update(UpdateTransactionDto $updateTransactionDto): void
+    {
+        $this->title = $updateTransactionDto->title;
+        $this->description = $updateTransactionDto->description;
+        $this->amount = $updateTransactionDto->amount;
+        $this->type = $updateTransactionDto->type;
+        $this->transactionDate = $updateTransactionDto->transactionDate;
+        $this->categoryId = $updateTransactionDto->categoryId;
+        $this->accountId = $updateTransactionDto->accountId;
     }
 
     public static function createFromDatabaseReturn(array $data): self

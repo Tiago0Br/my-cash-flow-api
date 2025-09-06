@@ -83,4 +83,30 @@ readonly class TransactionRepositoryFromPdo implements TransactionRepositoryInte
 
         return Transaction::createFromDatabaseReturn(data: $data);
     }
+
+    public function update(Transaction $transaction): void
+    {
+        $sql = <<<SQL
+            UPDATE transactions
+            SET title = :TITLE,
+                description = :DESCRIPTION,
+                amount = :AMOUNT,
+                type = :TYPE,
+                transaction_date = :TRANSACTION_DATE,
+                category_id = :CATEGORY_ID,
+                account_id = :ACCOUNT_ID
+            WHERE id = :ID
+        SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(param: ':ID', value:  (int) $transaction->id, type: PDO::PARAM_INT);
+        $stmt->bindValue(param: ':TITLE', value:  $transaction->title);
+        $stmt->bindValue(param: ':DESCRIPTION', value:  $transaction->description);
+        $stmt->bindValue(param: ':AMOUNT', value:  $transaction->amount);
+        $stmt->bindValue(param: ':TYPE', value:  $transaction->type);
+        $stmt->bindValue(param: ':TRANSACTION_DATE', value:  $transaction->transactionDate);
+        $stmt->bindValue(param: ':CATEGORY_ID', value:  $transaction->categoryId, type: PDO::PARAM_INT);
+        $stmt->bindValue(param: ':ACCOUNT_ID', value:  $transaction->accountId, type: PDO::PARAM_INT);
+        $stmt->execute();
+    }
 }

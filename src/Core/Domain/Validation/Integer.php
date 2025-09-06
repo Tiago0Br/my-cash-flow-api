@@ -26,15 +26,15 @@ class Integer implements ValidationInterface
             throw new InvalidArgumentException("Field '$field' should be an integer.");
         }
 
-        if (! $this->allowNegative && $parameters[$field] < 0) {
+        if (! $this->allowNegative && (int) $parameters[$field] < 0) {
             throw new InvalidArgumentException("Field '$field' should not be negative.");
         }
 
-        if ($this->min !== null && $parameters[$field] < $this->min) {
+        if ($this->min !== null && (int) $parameters[$field] < $this->min) {
             throw new InvalidArgumentException("Field '$field' should be at least $this->min.");
         }
 
-        if ($this->max !== null && $parameters[$field] > $this->max) {
+        if ($this->max !== null && (int) $parameters[$field] > $this->max) {
             throw new InvalidArgumentException("Field '$field' should be at most $this->max.");
         }
     }

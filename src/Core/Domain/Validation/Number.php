@@ -11,12 +11,31 @@ use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ValidationInterface;
 #[Attribute(flags: Attribute::TARGET_PROPERTY)]
 class Number implements ValidationInterface
 {
+    public function __construct(
+        public $allowNegative = false,
+        public ?int $min = null,
+        public ?int $max = null,
+    ) {
+    }
+
     public function validate(string $field, array $parameters): void
     {
         if (! isset($parameters[$field])) return;
 
-        if (! is_float(value: $parameters[$field]) && ! is_int(value: $parameters[$field])) {
+        if (! is_numeric(value: $parameters[$field])) {
             throw new InvalidArgumentException("Field '$field' should be a number.");
+        }
+
+        if (! $this->allowNegative && (float) $parameters[$field] < 0) {
+            throw new InvalidArgumentException("Field '$field' should not be negative.");
+        }
+
+        if ($this->min !== null && (float) $parameters[$field] < $this->min) {
+            throw new InvalidArgumentException("Field '$field' should be at least $this->min.");
+        }
+
+        if ($this->max !== null && (float) $parameters[$field] > $this->max) {
+            throw new InvalidArgumentException("Field '$field' should be at most $this->max.");
         }
     }
 }

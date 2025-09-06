@@ -12,6 +12,7 @@ use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\CreateCategory;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\CreateTransaction;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\DeleteAccount;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\UpdateAccount;
+use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\UpdateTransaction;
 use Tiagolopes\MyCashFlowApi\Finance\Infrastructure\Repository\Pdo\AccountRepositoryFromPdo;
 use Tiagolopes\MyCashFlowApi\Finance\Infrastructure\Repository\Pdo\CategoryRepositoryFromPdo;
 use Tiagolopes\MyCashFlowApi\Finance\Infrastructure\Repository\Pdo\TransactionRepositoryFromPdo;
@@ -60,6 +61,15 @@ $container->add(
     item: CreateTransaction::class,
     resolver: function () use ($container) {
         return new CreateTransaction(
+            transactionRepository: $container->get(TransactionRepositoryInterface::class)
+        );
+    }
+);
+
+$container->add(
+    item: UpdateTransaction::class,
+    resolver: function () use ($container) {
+        return new UpdateTransaction(
             transactionRepository: $container->get(TransactionRepositoryInterface::class)
         );
     }
