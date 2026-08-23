@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Tiagolopes\MyCashFlowApi\Core\Application\Controller;
 
 use OpenApi\Attributes as OA;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ControllerInterface;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\{Request, Response};
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Tiagolopes\MyCashFlowApi\Core\Domain\Enum\StatusCode;
 
-class HomeController implements ControllerInterface
+class HomeController
 {
     #[OA\Get(
         path: '/',
@@ -32,10 +32,12 @@ class HomeController implements ControllerInterface
             ],
         ),
     )]
-    public function processRequest(Container $container, Request $request, Response $response): void
+    public function __invoke(Request $request, Response $response): Response
     {
-        $response->send([
+        $response->getBody()->write(json_encode([
             'message' => 'API running!',
-        ]);
+        ]));
+
+        return $response->withStatus(StatusCode::OK);
     }
 }

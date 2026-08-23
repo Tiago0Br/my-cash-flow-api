@@ -4,34 +4,38 @@ declare(strict_types=1);
 
 namespace Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Middlewares;
 
+use Slim\Psr7\Response;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Auth\AuthenticationInterface;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\MiddlewareInterface;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Exception\UnauthorizedException;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Repository\UserRepositoryInterface;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Request;
 
-class CheckToken implements MiddlewareInterface
+readonly class CheckToken
 {
-    public function handle(Container $container, Request $request): void
+    public function __construct(
+        private ContainerInterface $container
+    ) {
+    }
+
+    public function __invoke(Request $request, RequestHandler $handler): Response
     {
         $token = $this->extractTokenFromRequest($request);
 
         /** @var AuthenticationInterface $authentication */
-        $authentication = $container->get(AuthenticationInterface::class);
+        $authentication = $this->container->get(AuthenticationInterface::class);
         $userId         = $authentication->verifyToken($token);
 
-        /** @var UserRepositoryInterface $userRepository */
-        $userRepository = $container->get(UserRepositoryInterface::class);
-        $user           = $userRepository->getById($userId);
+        $response = $handler->handle($request);
 
-        $request->setLoggedUser($user);
+        return $response
+            ->withAddedHeader('USER-ID', $userId);
     }
 
     private function extractTokenFromRequest(Request $request): string
     {
-        $authHeader = $request->headers['Authorization']
-            ?? $request->headers['authorization']
+        $authHeader = $request->getHeader('Authorization')[0]
+            ?? $request->getHeader('authorization')[0]
             ?? null;
 
         if (! is_string($authHeader) || trim($authHeader) === '') {

@@ -34,8 +34,11 @@ class Validator
                 throw new RuntimeException("Class '$class' must implement ValidationInterface.");
             }
 
+            $propertyName = $property->getName();
+            $snakeCaseName = strtolower(preg_replace(pattern: '/(?<!^)[A-Z]/', replacement: '_$0', subject: $propertyName));
+
             $validationClass->validate(
-                field: $property->getName(),
+                field: $snakeCaseName,
                 parameters: $parameters
             );
         }

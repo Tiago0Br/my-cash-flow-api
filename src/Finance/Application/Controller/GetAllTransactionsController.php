@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Tiagolopes\MyCashFlowApi\Finance\Application\Controller;
 
 use OpenApi\Attributes as OA;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ControllerInterface;
+use Psr\Container\ContainerInterface;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Dto\PaginationDto;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Request;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Response;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Tiagolopes\MyCashFlowApi\Core\Domain\Enum\StatusCode;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Repository\TransactionRepositoryInterface;
 
 #[OA\Get(
@@ -83,22 +83,29 @@ use Tiagolopes\MyCashFlowApi\Finance\Domain\Repository\TransactionRepositoryInte
         )
     ]
 )]
-class GetAllTransactionsController implements ControllerInterface
+readonly class GetAllTransactionsController
 {
-    public function processRequest(Container $container, Request $request, Response $response): void
+    public function __construct(
+        private ContainerInterface $container
+    ) {
+    }
+
+    public function __invoke(Request $request, Response $response): Response
     {
-        $userId        = (int) $request->getLoggedUser()->id;
-        $paginationDto = PaginationDto::fromArray($request->query);
+        $userId        = (int) $request->getHeader('USER-ID')[0];
+        $paginationDto = PaginationDto::fromArray($request->getQueryParams());
 
         /** @var TransactionRepositoryInterface $transactionRepository */
-        $transactionRepository = $container->get(TransactionRepositoryInterface::class);
+        $transactionRepository = $this->container->get(TransactionRepositoryInterface::class);
         $transactions          = $transactionRepository->getAll(paginationDto: $paginationDto, userId: $userId);
 
-        $response->send([
+        $response->getBody()->write(json_encode([
             'transactions' => array_map(
                 callback: fn ($transaction) => $transaction->jsonSerialize(),
                 array: $transactions
             ),
-        ]);
+        ]));
+
+        return $response->withStatus(StatusCode::OK);
     }
 }

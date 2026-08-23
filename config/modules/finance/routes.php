@@ -2,29 +2,28 @@
 
 declare(strict_types=1);
 
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\App;
+use Slim\App;
+use Slim\Routing\RouteCollectorProxy;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Middlewares\CheckToken;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\RouteGroup;
 use Tiagolopes\MyCashFlowApi\Finance\Application\Controller as Finance;
 
-$app = App::getInstance();
+/** @var App $app */
 
-$app->group('/accounts', [CheckToken::class], function (RouteGroup $app) {
-    $app
-        ->post('/', Finance\CreateAccountController::class)
-        ->get('/', Finance\GetAccountsController::class)
-        ->put('/{id}', Finance\UpdateAccountController::class)
-        ->delete('/{id}', Finance\DeleteAccountController::class);
-});
-$app->group('/categories', [CheckToken::class], function (RouteGroup $app) {
-    $app
-        ->get('/', Finance\GetCategoriesController::class)
-        ->post('/', Finance\CreateCategoryController::class);
-});
-$app->group('/transactions', [CheckToken::class], function (RouteGroup $app) {
-    $app
-        ->get('/', Finance\GetAllTransactionsController::class)
-        ->post('/', Finance\CreateTransactionController::class)
-        ->get('/{id}', Finance\GetTransactionByIdController::class)
-        ->put('/{id}', Finance\UpdateTransactionController::class);
-});
+$app->group('/accounts', function (RouteCollectorProxy $group) use ($app) {
+    $group->post('', new Finance\CreateAccountController($app->getContainer()));
+    $group->get('', new Finance\GetAccountsController($app->getContainer()));
+    $group->put('/{id}', new Finance\UpdateAccountController($app->getContainer()));
+    $group->delete('/{id}', new Finance\DeleteAccountController($app->getContainer()));
+})->add(new CheckToken($app->getContainer()));
+
+$app->group('/categories', function (RouteCollectorProxy $group) use ($app) {
+    $group->get('', new Finance\GetCategoriesController($app->getContainer()));
+    $group->post('', new Finance\CreateCategoryController($app->getContainer()));
+})->add(new CheckToken($app->getContainer()));
+
+$app->group('/transactions', function (RouteCollectorProxy $group) use ($app) {
+    $group->get('', new Finance\GetAllTransactionsController($app->getContainer()));
+    $group->post('', new Finance\CreateTransactionController($app->getContainer()));
+    $group->get('/{id}', new Finance\GetTransactionByIdController($app->getContainer()));
+    $group->put('/{id}', new Finance\UpdateTransactionController($app->getContainer()));
+})->add(new CheckToken($app->getContainer()));

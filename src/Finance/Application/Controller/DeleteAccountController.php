@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Tiagolopes\MyCashFlowApi\Finance\Application\Controller;
 
 use OpenApi\Attributes as OA;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ControllerInterface;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\{Request, Response};
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Tiagolopes\MyCashFlowApi\Core\Domain\Enum\StatusCode;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\DeleteAccount;
 
 #[OA\Delete(
@@ -91,19 +92,26 @@ use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\DeleteAccount;
         ],
     ),
 )]
-class DeleteAccountController implements ControllerInterface
+readonly class DeleteAccountController
 {
-    public function processRequest(Container $container, Request $request, Response $response): void
+    public function __construct(
+        private ContainerInterface $container
+    ) {
+    }
+
+    public function __invoke(Request $request, Response $response, array $args): Response
     {
-        $accountId = (int) $request->params['id'];
-        $user      = $request->getLoggedUser();
+        $accountId = (int) $args['id'];
+        $userId    = (int) $request->getHeader('USER-ID')[0];
 
         /** @var DeleteAccount $deleteAccount */
-        $deleteAccount = $container->get(DeleteAccount::class);
-        $deleteAccount->delete(accountId: $accountId, userId: $user->id);
+        $deleteAccount = $this->container->get(DeleteAccount::class);
+        $deleteAccount->delete(accountId: $accountId, userId: $userId);
 
-        $response->send([
+        $response->getBody()->write(json_encode([
             'message' => 'Account deleted successfully',
-        ]);
+        ]));
+
+        return $response->withStatus(StatusCode::OK);
     }
 }

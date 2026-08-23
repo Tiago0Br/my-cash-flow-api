@@ -6,40 +6,54 @@ namespace Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http;
 
 use DomainException;
 use InvalidArgumentException;
+use Psr\Http\Message\ResponseInterface;
+use Slim\Exception\HttpNotFoundException;
+use Slim\Handlers\ErrorHandler as SlimErrorHandler;
 use Throwable;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Enum\StatusCode;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Exception\NotFoundException;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Exception\UnauthorizedException;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Log\Logger;
 
-class ErrorHandler
+class ErrorHandler extends SlimErrorHandler
 {
-    public static function handle(Throwable $error): void
+    protected function respond(): ResponseInterface
     {
-        $statusCode = self::getStatusCodeByError($error);
+        $exception = $this->exception;
+        $response = $this->responseFactory->createResponse();
 
-        if ($statusCode === StatusCode::INTERNAL_SERVER_ERROR) {
-            if ($_ENV['APP_ENV'] !== 'production') {
-                sprintf('Error: %s', $error->getMessage());
-            } else {
-                Logger::log(
-                    filename: 'internal-errors.log',
-                    message: $error->getMessage()
-                );
+        $statusCode = 500;
+        $code = 'INTERNAL_SERVER_ERROR';
+        $message = 'Ocorreu um erro interno no servidor.';
+
+        if ($exception instanceof InvalidArgumentException) {
+            $statusCode = 400;
+            $code = 'VALIDATION_ERROR';
+            $message = $exception->getMessage();
+        } elseif ($exception instanceof HttpNotFoundException || $exception instanceof NotFoundException) {
+            $statusCode = 404;
+            $code = 'NOT_FOUND';
+            $message = 'Recurso não encontrado.';
+        } else if ($exception instanceof UnauthorizedException) {
+            $statusCode = 401;
+            $code = 'UNAUTHORIZED';
+            $message = 'Acesso não autorizado.';
+        } else {
+            if (getenv('ENVIRONMENT') === 'development') {
+                $message = $exception->getMessage();
             }
         }
 
-        sendResponse(
-            data: [
-                'error' => ($statusCode === StatusCode::INTERNAL_SERVER_ERROR && $_ENV['APP_ENV'] === 'production')
-                    ? 'Internal server error.'
-                    : $error->getMessage(),
-            ],
-            code: $statusCode
-        );
+        $response->getBody()->write(json_encode([
+            'code' => $code,
+            'error' => $message
+        ]));
+
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus($statusCode);
     }
 
-    private static function getStatusCodeByError(Throwable $error): int
+    private function getStatusCodeByError(Throwable $error): int
     {
         if ($error instanceof NotFoundException) return StatusCode::NOT_FOUND;
         if ($error instanceof UnauthorizedException) return StatusCode::UNAUTHORIZED;

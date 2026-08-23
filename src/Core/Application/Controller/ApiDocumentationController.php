@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Tiagolopes\MyCashFlowApi\Core\Application\Controller;
 
 use OpenApi\Generator;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ControllerInterface;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\{Request, Response};
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Tiagolopes\MyCashFlowApi\Core\Domain\Enum\StatusCode;
 
-class ApiDocumentationController implements ControllerInterface
+class ApiDocumentationController
 {
-    public function processRequest(Container $container, Request $request, Response $response): void
+    public function __invoke(Request $request, Response $response): Response
     {
         $openapi = new Generator()->generate([
             __DIR__ . '/../../Domain/OpenApi',
@@ -19,6 +19,8 @@ class ApiDocumentationController implements ControllerInterface
             __DIR__ . '/../../../Finance/Application/Controller'
         ]);
 
-        $response->send($openapi->toJson());
+        $response->getBody()->write($openapi->toJson());
+
+        return $response->withStatus(StatusCode::OK);
     }
 }

@@ -1,11 +1,10 @@
 <?php
 
+use Slim\App;
 use Tiagolopes\MyCashFlowApi\Core\Application\Controller\ApiDocumentationController;
 use Tiagolopes\MyCashFlowApi\Core\Application\Controller\SwaggerDocumentationController;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\App;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\ErrorHandler;
 
-$app = App::getInstance();
+/** @var App $app */
 
 /** @var string[] $modules */
 $modules = require __DIR__ . '/modules.php';
@@ -16,12 +15,5 @@ foreach ($modules as $module) {
 }
 
 // Load API documentation
-$app
-    ->get('/docs/json', ApiDocumentationController::class)
-    ->get('/docs', SwaggerDocumentationController::class);
-
-try {
-    $app->run();
-} catch (Throwable $e) {
-    ErrorHandler::handle($e);
-}
+$app->get('/docs/json', ApiDocumentationController::class);
+$app->get('/docs', SwaggerDocumentationController::class);

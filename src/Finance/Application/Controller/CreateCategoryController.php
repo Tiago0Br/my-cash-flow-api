@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Tiagolopes\MyCashFlowApi\Finance\Application\Controller;
 
 use OpenApi\Attributes as OA;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ControllerInterface;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Enum\StatusCode;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\{Request, Response};
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Dto\CreateCategoryDto;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\CreateCategory;
 
@@ -111,18 +111,25 @@ use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\CreateCategory;
         ],
     )
 )]
-class CreateCategoryController implements ControllerInterface
+readonly class CreateCategoryController
 {
-    public function processRequest(Container $container, Request $request, Response $response): void
+    public function __construct(
+        private ContainerInterface $container
+    ) {
+    }
+
+    public function __invoke(Request $request, Response $response): Response
     {
-        $createCategoryDto = CreateCategoryDto::fromArray($request->body);
+        $createCategoryDto = CreateCategoryDto::fromArray($request->getParsedBody());
 
         /** @var CreateCategory $createCategory */
-        $createCategory = $container->get(CreateCategory::class);
+        $createCategory = $this->container->get(CreateCategory::class);
         $createCategory->execute($createCategoryDto);
 
-        $response->send([
+        $response->getBody()->write(json_encode([
             'message' => 'Category created successfully'
-        ], StatusCode::CREATED);
+        ]));
+
+        return $response->withStatus(StatusCode::CREATED);
     }
 }

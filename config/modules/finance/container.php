@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
+use DI\Container;
 use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Database\Connection;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Repository\AccountRepositoryInterface;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Repository\CategoryRepositoryInterface;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Repository\TransactionRepositoryInterface;
@@ -17,58 +17,59 @@ use Tiagolopes\MyCashFlowApi\Finance\Infrastructure\Repository\Pdo\AccountReposi
 use Tiagolopes\MyCashFlowApi\Finance\Infrastructure\Repository\Pdo\CategoryRepositoryFromPdo;
 use Tiagolopes\MyCashFlowApi\Finance\Infrastructure\Repository\Pdo\TransactionRepositoryFromPdo;
 
-$container = Container::getInstance();
-$db        = Connection::getInstance();
+/** @var Container $container */
+
+$db = Connection::getInstance();
 
 // Services
-$container->add(
-    item: CreateAccount::class,
-    resolver: function () use ($container) {
+$container->set(
+    name: CreateAccount::class,
+    value: function () use ($container) {
         return new CreateAccount(
             accountRepository: $container->get(AccountRepositoryInterface::class)
         );
     }
 );
 
-$container->add(
-    item: UpdateAccount::class,
-    resolver: function () use ($container) {
+$container->set(
+    name: UpdateAccount::class,
+    value: function () use ($container) {
         return new UpdateAccount(
             accountRepository: $container->get(AccountRepositoryInterface::class)
         );
     }
 );
 
-$container->add(
-    item: DeleteAccount::class,
-    resolver: function () use ($container) {
+$container->set(
+    name: DeleteAccount::class,
+    value: function () use ($container) {
         return new DeleteAccount(
             accountRepository: $container->get(AccountRepositoryInterface::class)
         );
     }
 );
 
-$container->add(
-    item: CreateCategory::class,
-    resolver: function () use ($container) {
+$container->set(
+    name: CreateCategory::class,
+    value: function () use ($container) {
         return new CreateCategory(
             categoryRepository: $container->get(CategoryRepositoryInterface::class)
         );
     }
 );
 
-$container->add(
-    item: CreateTransaction::class,
-    resolver: function () use ($container) {
+$container->set(
+    name: CreateTransaction::class,
+    value: function () use ($container) {
         return new CreateTransaction(
             transactionRepository: $container->get(TransactionRepositoryInterface::class)
         );
     }
 );
 
-$container->add(
-    item: UpdateTransaction::class,
-    resolver: function () use ($container) {
+$container->set(
+    name: UpdateTransaction::class,
+    value: function () use ($container) {
         return new UpdateTransaction(
             transactionRepository: $container->get(TransactionRepositoryInterface::class)
         );
@@ -76,23 +77,23 @@ $container->add(
 );
 
 // Repository
-$container->add(
-    item: AccountRepositoryInterface::class,
-    resolver: function () use ($db) {
+$container->set(
+    name: AccountRepositoryInterface::class,
+    value: function () use ($db) {
         return new AccountRepositoryFromPdo($db);
     }
 );
 
-$container->add(
-    item: CategoryRepositoryInterface::class,
-    resolver: function () use ($db) {
+$container->set(
+    name: CategoryRepositoryInterface::class,
+    value: function () use ($db) {
         return new CategoryRepositoryFromPdo($db);
     }
 );
 
-$container->add(
-    item: TransactionRepositoryInterface::class,
-    resolver: function () use ($db) {
+$container->set(
+    name: TransactionRepositoryInterface::class,
+    value: function () use ($db) {
         return new TransactionRepositoryFromPdo($db);
     }
 );

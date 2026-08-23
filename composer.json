@@ -20,7 +20,10 @@
         "php": "^8.4",
         "ext-pdo": "*",
         "zircote/swagger-php": "^5.1",
-        "ramsey/uuid": "^4.9"
+        "ramsey/uuid": "^4.9",
+        "slim/slim": "4.*",
+        "slim/psr7": "^1.8",
+        "php-di/php-di": "^7.1"
     },
     "scripts": {
         "serve": [

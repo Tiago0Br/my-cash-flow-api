@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Tiagolopes\MyCashFlowApi\Finance\Application\Controller;
 
 use OpenApi\Attributes as OA;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ControllerInterface;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Request;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Response;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Tiagolopes\MyCashFlowApi\Core\Domain\Enum\StatusCode;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Dto\GetTransactionByIdDto;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Repository\TransactionRepositoryInterface;
 
@@ -91,19 +91,26 @@ use Tiagolopes\MyCashFlowApi\Finance\Domain\Repository\TransactionRepositoryInte
         ),
     ]
 )]
-class GetTransactionByIdController implements ControllerInterface
+readonly class GetTransactionByIdController
 {
-    public function processRequest(Container $container, Request $request, Response $response): void
+    public function __construct(
+        private ContainerInterface $container
+    ) {
+    }
+
+    public function __invoke(Request $request, Response $response, array $args): Response
     {
-        $userId = (int) $request->getLoggedUser()->id;
-        $dto    = GetTransactionByIdDto::fromArray($request->params);
+        $userId = (int) $request->getHeader('USER-ID')[0];
+        $dto    = GetTransactionByIdDto::fromArray($args);
 
         /** @var TransactionRepositoryInterface $transactionRepository */
-        $transactionRepository = $container->get(TransactionRepositoryInterface::class);
+        $transactionRepository = $this->container->get(TransactionRepositoryInterface::class);
         $transaction           = $transactionRepository->getById($dto->id, $userId);
 
-        $response->send([
+        $response->getBody()->write(json_encode([
             'transaction' => $transaction->jsonSerialize(),
-        ]);
+        ]));
+
+        return $response->withStatus(StatusCode::OK);
     }
 }

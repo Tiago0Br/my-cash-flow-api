@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace Tiagolopes\MyCashFlowApi\Finance\Application\Controller;
 
 use OpenApi\Attributes as OA;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ControllerInterface;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Tiagolopes\MyCashFlowApi\Core\Domain\Enum\StatusCode;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Request;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Response;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Dto\CreateTransactionDto;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\CreateTransaction;
 
@@ -121,18 +120,25 @@ use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\CreateTransaction;
         ],
     ),
 )]
-class CreateTransactionController implements ControllerInterface
+readonly class CreateTransactionController
 {
-    public function processRequest(Container $container, Request $request, Response $response): void
+    public function __construct(
+        private ContainerInterface $container
+    ) {
+    }
+
+    public function __invoke(Request $request, Response $response): Response
     {
-        $createTransactionDto = CreateTransactionDto::fromArray($request->body);
+        $createTransactionDto = CreateTransactionDto::fromArray($request->getParsedBody());
 
         /** @var CreateTransaction $createTransaction */
-        $createTransaction = $container->get(CreateTransaction::class);
+        $createTransaction = $this->container->get(CreateTransaction::class);
         $createTransaction->create($createTransactionDto);
 
-        $response->send([
+        $response->getBody()->write(json_encode([
             'message' => 'Transaction created successfully',
-        ], StatusCode::CREATED);
+        ]));
+
+        return $response->withStatus(StatusCode::CREATED);
     }
 }

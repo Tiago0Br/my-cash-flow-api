@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Tiagolopes\MyCashFlowApi\Finance\Application\Controller;
 
 use OpenApi\Attributes as OA;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ControllerInterface;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\{Request, Response};
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Tiagolopes\MyCashFlowApi\Core\Domain\Enum\StatusCode;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Repository\CategoryRepositoryInterface;
 
 #[OA\Get(
@@ -58,16 +59,23 @@ use Tiagolopes\MyCashFlowApi\Finance\Domain\Repository\CategoryRepositoryInterfa
         ],
     ),
 )]
-class GetCategoriesController implements ControllerInterface
+readonly class GetCategoriesController
 {
-    public function processRequest(Container $container, Request $request, Response $response): void
+    public function __construct(
+        private ContainerInterface $container
+    ) {
+    }
+
+    public function __invoke(Request $request, Response $response): Response
     {
         /** @var CategoryRepositoryInterface $categoryRepository */
-        $categoryRepository = $container->get(CategoryRepositoryInterface::class);
+        $categoryRepository = $this->container->get(CategoryRepositoryInterface::class);
         $categories         = $categoryRepository->getAll();
 
-        $response->send([
+        $response->getBody()->write(json_encode([
             'categories' => array_map(fn ($category) => $category->jsonSerialize(), $categories),
-        ]);
+        ]));
+
+        return $response->withStatus(StatusCode::OK);
     }
 }

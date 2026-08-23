@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Tiagolopes\MyCashFlowApi\Finance\Application\Controller;
 
 use OpenApi\Attributes as OA;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ControllerInterface;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\DependecyInjection\Container;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Request;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Http\Response;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Tiagolopes\MyCashFlowApi\Core\Domain\Enum\StatusCode;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Dto\UpdateTransactionDto;
 use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\UpdateTransaction;
 
@@ -129,22 +129,29 @@ use Tiagolopes\MyCashFlowApi\Finance\Domain\Service\UpdateTransaction;
         ],
     ),
 )]
-class UpdateTransactionController implements ControllerInterface
+readonly class UpdateTransactionController
 {
-    public function processRequest(Container $container, Request $request, Response $response): void
+    public function __construct(
+        private ContainerInterface $container
+    ) {
+    }
+
+    public function __invoke(Request $request, Response $response): Response
     {
-        $userId = (int) $request->getLoggedUser()->id;
+        $userId = (int) $request->getHeader('USER-ID')[0];
         $dto    = UpdateTransactionDto::fromArray(array_merge(
-            $request->params,
-            $request->body
+            $request->getQueryParams(),
+            $request->getParsedBody()
         ));
 
         /** @var UpdateTransaction $updateTransaction */
-        $updateTransaction = $container->get(UpdateTransaction::class);
+        $updateTransaction = $this->container->get(UpdateTransaction::class);
         $updateTransaction->update($dto, $userId);
 
-        $response->send([
+        $response->getBody()->write(json_encode([
             'message' => 'Transaction updated successfully',
-        ]);
+        ]));
+
+        return $response->withStatus(StatusCode::OK);
     }
 }
