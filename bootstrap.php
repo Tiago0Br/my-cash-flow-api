@@ -3,10 +3,11 @@
 require_once __DIR__ . '/vendor/autoload.php';
 
 use DI\Container;
+use Dotenv\Dotenv;
 use Slim\Factory\AppFactory;
-use Tiagolopes\MyCashFlowApi\Core\Infrastructure\Environment\Environment;
 
-Environment::initialize(__DIR__);
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
 $container = new Container();
 

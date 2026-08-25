@@ -15,7 +15,7 @@
 
 Este projeto foi desenvolvido com o objetivo principal de **praticar e aprofundar conhecimentos em PHP**, utilizando:
 
-- **PHP Puro** (sem frameworks) para entender os conceitos fundamentais
+- **PHP Puro** e **Slim Framework** para criação das rotas
 - **PDO** para acesso ao banco de dados
 - **Orientação a Objetos** com aplicação de princípios SOLID
 - **Clean Code** e boas práticas de desenvolvimento
@@ -75,6 +75,7 @@ src/
 ## 🛠️ Tecnologias Utilizadas
 
 - **PHP 8.4+** - Linguagem principal
+- **Slim Framework** - Micro framework para facilitar a criação das rotas da API
 - **PostgreSQL** - Banco de dados
 - **PDO** - Interface de acesso ao banco de dados
 - **Swagger/OpenAPI** - Documentação da API

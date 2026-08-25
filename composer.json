@@ -23,18 +23,23 @@
         "ramsey/uuid": "^4.9",
         "slim/slim": "4.*",
         "slim/psr7": "^1.8",
-        "php-di/php-di": "^7.1"
+        "php-di/php-di": "^7.1",
+        "robmorgan/phinx": "^0.16.12"
     },
     "scripts": {
         "serve": [
             "Composer\\Config::disableProcessTimeout",
             "php -S localhost:3000 -t ./public"
         ],
-        "migrate": "php bin/migrate.php",
-        "migrate:create": "php bin/create-migration.php",
+        "migrate": "phinx migrate",
+        "rollback": "phinx rollback",
+        "create-migration": "phinx create",
         "dev": [
             "@migrate",
             "@serve"
         ]
+    },
+    "require-dev": {
+        "vlucas/phpdotenv": "^5.7"
     }
 }
