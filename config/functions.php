@@ -1,20 +1,5 @@
 <?php
 
-use Tiagolopes\MyCashFlowApi\Core\Domain\Enum\StatusCode;
-
-function sendResponse(
-    array|string|null $data = null,
-    int $code = StatusCode::OK,
-    string $contentType = 'application/json'
-): void {
-    header('Content-Type: ' . $contentType);
-    http_response_code($code);
-
-    if ($data !== null) {
-        echo is_array($data) ? json_encode($data) : $data;
-    }
-}
-
 function getBaseUrl(): string
 {
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
