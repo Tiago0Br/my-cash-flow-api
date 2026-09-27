@@ -41,9 +41,9 @@ readonly class CreateTransactionDto
             title: $params['title'],
             amount: (float) $params['amount'],
             type: $params['type'],
-            transactionDate: $params['transactionDate'],
-            categoryId: (int) $params['categoryId'],
-            accountId: (int) $params['accountId'],
+            transactionDate: $params['transaction_date'],
+            categoryId: (int) $params['category_id'],
+            accountId: (int) $params['account_id'],
             description: $params['description'] ?? null
         );
     }

@@ -103,7 +103,7 @@ readonly class CreateAccountController
     public function __invoke(Request $request, Response $response): Response
     {
         $createAccountDto = CreateAccountDto::fromArray($request->getParsedBody());
-        $userId           = (int) $request->getHeader('USER-ID')[0];
+        $userId           = (int) $request->getAttribute('userId');
 
         /** @var CreateAccount $createAccount */
         $createAccount = $this->container->get(CreateAccount::class);

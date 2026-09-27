@@ -7,7 +7,7 @@ namespace Tiagolopes\MyCashFlowApi\Core\Domain\Validation;
 use ReflectionClass;
 use ReflectionProperty;
 use RuntimeException;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ValidationInterface;
+use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\AbstractValidator;
 
 class Validator
 {
@@ -29,15 +29,15 @@ class Validator
         foreach ($property->getAttributes() as $attribute) {
             $validationClass = $attribute->newInstance();
 
-            if (! $validationClass instanceof ValidationInterface) {
+            if (!$validationClass instanceof AbstractValidator) {
                 $class = $validationClass::class;
-                throw new RuntimeException("Class '$class' must implement ValidationInterface.");
+                throw new RuntimeException("Class '$class' must implement AbstractValidator.");
             }
 
             $propertyName = $property->getName();
             $snakeCaseName = strtolower(preg_replace(pattern: '/(?<!^)[A-Z]/', replacement: '_$0', subject: $propertyName));
 
-            $validationClass->validate(
+            $validationClass->executeValidation(
                 field: $snakeCaseName,
                 parameters: $parameters
             );

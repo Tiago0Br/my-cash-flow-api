@@ -26,10 +26,9 @@ readonly class CheckToken
         $authentication = $this->container->get(AuthenticationInterface::class);
         $userId         = $authentication->verifyToken($token);
 
-        $response = $handler->handle($request);
+        $request = $request->withAttribute('userId', $userId);
 
-        return $response
-            ->withAddedHeader('USER-ID', $userId);
+        return $handler->handle($request);
     }
 
     private function extractTokenFromRequest(Request $request): string

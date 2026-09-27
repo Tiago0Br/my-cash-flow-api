@@ -68,7 +68,7 @@ readonly class GetAccountsController
 
     public function __invoke(Request $request, Response $response): Response
     {
-        $userId = (int) $request->getHeader('USER-ID')[0];
+        $userId = (int) $request->getAttribute('userId');
 
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = $this->container->get(AccountRepositoryInterface::class);

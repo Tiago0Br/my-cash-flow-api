@@ -102,7 +102,7 @@ readonly class DeleteAccountController
     public function __invoke(Request $request, Response $response, array $args): Response
     {
         $accountId = (int) $args['id'];
-        $userId    = (int) $request->getHeader('USER-ID')[0];
+        $userId    = (int) $request->getAttribute('userId');
 
         /** @var DeleteAccount $deleteAccount */
         $deleteAccount = $this->container->get(DeleteAccount::class);

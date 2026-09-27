@@ -100,7 +100,7 @@ readonly class GetTransactionByIdController
 
     public function __invoke(Request $request, Response $response, array $args): Response
     {
-        $userId = (int) $request->getHeader('USER-ID')[0];
+        $userId = (int) $request->getAttribute('userId');
         $dto    = GetTransactionByIdDto::fromArray($args);
 
         /** @var TransactionRepositoryInterface $transactionRepository */

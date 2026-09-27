@@ -6,14 +6,16 @@ namespace Tiagolopes\MyCashFlowApi\Core\Domain\Validation;
 
 use Attribute;
 use InvalidArgumentException;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ValidationInterface;
+use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\AbstractValidator;
 
 #[Attribute(flags: Attribute::TARGET_PROPERTY)]
-class Required implements ValidationInterface
+class Required extends AbstractValidator
 {
+    protected bool $required = true;
+
     public function validate(string $field, array $parameters): void
     {
-        if (! isset($parameters[$field])) {
+        if (!isset($parameters[$field])) {
             throw new InvalidArgumentException("Field '$field' is required.");
         }
     }

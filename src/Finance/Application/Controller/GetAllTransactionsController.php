@@ -92,7 +92,7 @@ readonly class GetAllTransactionsController
 
     public function __invoke(Request $request, Response $response): Response
     {
-        $userId        = (int) $request->getHeader('USER-ID')[0];
+        $userId        = (int) $request->getAttribute('userId');
         $paginationDto = PaginationDto::fromArray($request->getQueryParams());
 
         /** @var TransactionRepositoryInterface $transactionRepository */

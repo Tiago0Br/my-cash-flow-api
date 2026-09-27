@@ -7,10 +7,10 @@ namespace Tiagolopes\MyCashFlowApi\Core\Domain\Validation;
 use Attribute;
 use DateTime;
 use InvalidArgumentException;
-use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\ValidationInterface;
+use Tiagolopes\MyCashFlowApi\Core\Domain\Contracts\AbstractValidator;
 
 #[Attribute(flags: Attribute::TARGET_PROPERTY)]
-class Date implements ValidationInterface
+class Date extends AbstractValidator
 {
     public function __construct(
         public string $format = 'Y-m-d',

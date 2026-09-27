@@ -138,7 +138,7 @@ readonly class UpdateTransactionController
 
     public function __invoke(Request $request, Response $response): Response
     {
-        $userId = (int) $request->getHeader('USER-ID')[0];
+        $userId = (int) $request->getAttribute('userId');
         $dto    = UpdateTransactionDto::fromArray(array_merge(
             $request->getQueryParams(),
             $request->getParsedBody()
